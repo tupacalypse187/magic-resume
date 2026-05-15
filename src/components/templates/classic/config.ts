@@ -4,6 +4,7 @@ export const classicConfig: ResumeTemplate = {
   id: "classic",
   name: "经典模板",
   description: "传统简约的简历布局，适合大多数求职场景",
+  translationKey: "classic",
   thumbnail: "classic",
   layout: "classic",
   colorScheme: {

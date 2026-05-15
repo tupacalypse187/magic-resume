@@ -33,17 +33,13 @@ type BlankTemplate = {
     nameKey: "blankTitle";
 };
 
-type NormalTemplate = ResumeTemplate & { isBlank: false; nameKey: string };
+type NormalTemplate = ResumeTemplate & { isBlank: false };
 type TemplateOption = NormalTemplate | BlankTemplate;
-
-const toTemplateNameKey = (templateId: string) =>
-    templateId === "left-right" ? "leftRight" : templateId;
 
 const BLANK_TEMPLATE: BlankTemplate = { id: null, isBlank: true, nameKey: "blankTitle" };
 const NORMAL_TEMPLATES: NormalTemplate[] = DEFAULT_TEMPLATES.map((template) => ({
     ...template,
     isBlank: false,
-    nameKey: toTemplateNameKey(template.id),
 }));
 
 const BlankTemplateThumbnail = ({ t }: { t: Translator }) => (
@@ -77,7 +73,7 @@ const TemplateCardThumbnail = ({
         return (
             <img
                 src={snapshotSrc}
-                alt={t(`dashboard.templates.${template.nameKey}.name`)}
+                alt={t(`dashboard.templates.${template.translationKey}.name`)}
                 className="h-full w-full object-cover object-top"
                 loading="eager"
                 draggable={false}
@@ -88,7 +84,7 @@ const TemplateCardThumbnail = ({
     return (
         <div className="w-full h-full flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-800/50">
             <span className="text-lg font-semibold text-gray-700 dark:text-gray-200">
-                {t(`dashboard.templates.${template.nameKey}.name`)}
+                {t(`dashboard.templates.${template.translationKey}.name`)}
             </span>
         </div>
     );
@@ -286,7 +282,7 @@ export const CreateResumeModal = ({
                                     </div>
                                     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 sm:gap-8 hover:!shadow-none">
                                         {NORMAL_TEMPLATES.map((template) => {
-                                            const templateName = t(`dashboard.templates.${template.nameKey}.name`);
+                                            const templateName = t(`dashboard.templates.${template.translationKey}.name`);
 
                                             return (
                                                 <motion.div
@@ -381,7 +377,7 @@ export const CreateResumeModal = ({
                                             <h3 className="text-4xl font-black tracking-tight text-gray-900 dark:text-white mb-4">
                                                 {previewTarget.isBlank
                                                     ? t("dashboard.resumes.createDialog.blankTitle")
-                                                    : t(`dashboard.templates.${previewTarget.nameKey}.name`)}
+                                                    : t(`dashboard.templates.${previewTarget.translationKey}.name`)}
                                             </h3>
                                         </motion.div>
 
@@ -390,7 +386,7 @@ export const CreateResumeModal = ({
                                         <p className="text-gray-600 dark:text-gray-400 text-lg leading-relaxed mb-10 font-medium">
                                             {previewTarget.isBlank
                                                 ? t("dashboard.resumes.createDialog.blankPreviewDescription")
-                                                : t(`dashboard.templates.${previewTarget.nameKey}.description`)}
+                                                : t(`dashboard.templates.${previewTarget.translationKey}.description`)}
                                         </p>
 
                                         <div className="space-y-4">

@@ -83,9 +83,15 @@ function RootComponent() {
 }
 
 function RootNotFound() {
+  const pathname = typeof window !== "undefined" ? window.location.pathname : "";
+  const locale = getPreferredLocale(pathname);
+  const messages = locale === "en" ? enMessages : zhMessages;
+
   return (
-    <main className="min-h-screen flex items-center justify-center">
-      <p className="text-muted-foreground">页面不存在</p>
-    </main>
+    <NextIntlClientProvider locale={locale} messages={messages} timeZone="Asia/Shanghai">
+      <main className="min-h-screen flex items-center justify-center">
+        <p className="text-muted-foreground">{messages.common.notFound}</p>
+      </main>
+    </NextIntlClientProvider>
   );
 }

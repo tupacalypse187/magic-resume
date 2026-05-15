@@ -22,6 +22,7 @@ interface TemplatePreviewProps {
   isActive: boolean;
   snapshotSrc: string | null;
   onSelect: (templateId: string) => void;
+  translatedName: string;
 }
 
 const TemplatePreview = ({
@@ -29,6 +30,7 @@ const TemplatePreview = ({
   isActive,
   snapshotSrc,
   onSelect,
+  translatedName,
 }: TemplatePreviewProps) => {
   return (
     <button
@@ -44,7 +46,7 @@ const TemplatePreview = ({
         {snapshotSrc ? (
           <img
             src={snapshotSrc}
-            alt={template.name}
+            alt={translatedName}
             className="h-full w-full object-cover object-top"
             loading="eager"
             draggable={false}
@@ -53,7 +55,7 @@ const TemplatePreview = ({
           <div className="flex h-full w-full flex-col items-center justify-center gap-3 bg-gradient-to-br from-gray-50 to-gray-100 text-gray-500 dark:from-neutral-900 dark:to-neutral-950 dark:text-neutral-400">
             <ImageIcon className="h-8 w-8" />
             <span className="px-4 text-center text-sm font-medium">
-              {template.name}
+              {translatedName}
             </span>
           </div>
         )}
@@ -72,6 +74,7 @@ const TemplatePreview = ({
 
 const TemplateSheet = () => {
   const t = useTranslations("templates");
+  const tDashboard = useTranslations("dashboard.templates");
   const locale = useLocale();
   const { activeResume, setTemplate } = useResumeStore();
   const { snapshotMap } = useTemplateSnapshots(locale);
@@ -101,6 +104,7 @@ const TemplateSheet = () => {
                   isActive={template.id === currentTemplate.id}
                   snapshotSrc={snapshotMap[template.id]}
                   onSelect={setTemplate}
+                  translatedName={tDashboard(`${template.translationKey}.name`)}
                 />
               ))}
             </div>

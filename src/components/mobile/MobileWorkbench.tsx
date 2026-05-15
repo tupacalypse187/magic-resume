@@ -8,6 +8,7 @@ import { EditPanel } from "@/components/editor/EditPanel";
 import { SidePanel } from "@/components/editor/SidePanel";
 import PreviewPanel from "@/components/preview";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { useTranslations } from "@/i18n/compat/client";
 
 type TabType = "content" | "style" | "preview";
 
@@ -15,6 +16,7 @@ export function MobileWorkbench() {
   const [activeTab, setActiveTab] = useState<TabType>("content");
   const { activeResume, setActiveSection } = useResumeStore();
   const { activeSection, menuSections } = activeResume || {};
+  const t = useTranslations("workbench.basicPanel");
 
   // 渲染底部导航项
   const renderNavItem = (tab: TabType, icon: React.ReactNode, label: string) => (
@@ -69,7 +71,7 @@ export function MobileWorkbench() {
                       )}
                     >
                       <span className="mr-1.5">👤</span>
-                      基本信息
+                      {t("mobileNav.basicInfo")}
                     </button>
                     
                     {/* 其他模块 */}
@@ -131,6 +133,7 @@ export function MobileWorkbench() {
                 previewPanelCollapsed={false}
                 toggleSidePanel={() => {}}
                 toggleEditPanel={() => {}}
+                togglePreviewPanel={() => {}}
               />
             </motion.div>
           )}
@@ -139,9 +142,9 @@ export function MobileWorkbench() {
 
       {/* 底部导航栏 */}
       <div className="h-16 border-t bg-background flex items-center justify-around relative shadow-[0_-1px_3px_rgba(0,0,0,0.05)] z-50">
-        {renderNavItem("content", <FileText className="w-5 h-5" />, "内容")}
-        {renderNavItem("style", <Palette className="w-5 h-5" />, "样式")}
-        {renderNavItem("preview", <Eye className="w-5 h-5" />, "预览")}
+        {renderNavItem("content", <FileText className="w-5 h-5" />, t("mobileNav.content"))}
+        {renderNavItem("style", <Palette className="w-5 h-5" />, t("mobileNav.style"))}
+        {renderNavItem("preview", <Eye className="w-5 h-5" />, t("mobileNav.preview"))}
       </div>
     </div>
   );

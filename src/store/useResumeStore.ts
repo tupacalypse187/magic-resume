@@ -619,12 +619,19 @@ export const useResumeStore = create(
         const { activeResumeId } = get();
         if (activeResumeId) {
           const currentResume = get().resumes[activeResumeId];
+          const locale =
+            typeof document !== "undefined"
+              ? document.cookie
+                  .split("; ")
+                  .find((row) => row.startsWith("NEXT_LOCALE="))
+                  ?.split("=")[1] || "zh"
+              : "zh";
           const updatedCustomData = {
             ...currentResume.customData,
             [sectionId]: [
               {
                 id: generateUUID(),
-                title: "未命名模块",
+                title: locale === "en" ? "Untitled Section" : "未命名模块",
                 subtitle: "",
                 dateRange: "",
                 description: "",
@@ -661,13 +668,20 @@ export const useResumeStore = create(
         const { activeResumeId } = get();
         if (activeResumeId) {
           const currentResume = get().resumes[activeResumeId];
+          const locale =
+            typeof document !== "undefined"
+              ? document.cookie
+                  .split("; ")
+                  .find((row) => row.startsWith("NEXT_LOCALE="))
+                  ?.split("=")[1] || "zh"
+              : "zh";
           const updatedCustomData = {
             ...currentResume.customData,
             [sectionId]: [
               ...(currentResume.customData[sectionId] || []),
               {
                 id: generateUUID(),
-                title: "未命名模块",
+                title: locale === "en" ? "Untitled Section" : "未命名模块",
                 subtitle: "",
                 dateRange: "",
                 description: "",

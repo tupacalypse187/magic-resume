@@ -28,9 +28,6 @@ const PRESET_COLORS = [
   { name: "black", value: "#000000" },
 ];
 
-const getTemplateKey = (templateId: string) =>
-  templateId === "left-right" ? "leftRight" : templateId;
-
 type TemplatePreviewBaseData =
   | typeof initialResumeState
   | typeof initialResumeStateEn;
@@ -307,14 +304,13 @@ const TemplatesPage = () => {
 
           <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 sm:gap-6">
             {DEFAULT_TEMPLATES.map((template, index) => {
-              const templateKey = getTemplateKey(template.id);
               return (
                 <TemplateCardItem
                   key={template.id}
                   index={index}
                   template={template}
-                  templateName={t(`${templateKey}.name`)}
-                  templateDescription={t(`${templateKey}.description`)}
+                  templateName={t(`${template.translationKey}.name`)}
+                  templateDescription={t(`${template.translationKey}.description`)}
                   baseData={baseData}
                   selectedColor={selectedColor}
                   onPreview={() => setPreviewTemplate(template.id)}
@@ -337,7 +333,7 @@ const TemplatesPage = () => {
                 <div className="flex flex-col">
                   <div className="border-b border-gray-100 dark:border-gray-800 px-4 py-4">
                     <DialogTitle className="text-lg font-medium">
-                      {t(`${getTemplateKey(activePreviewTemplate.id)}.name`)}
+                      {t(`${activePreviewTemplate.translationKey}.name`)}
                     </DialogTitle>
                   </div>
                   <div className="overflow-hidden flex items-center justify-center bg-gray-50 dark:bg-gray-950 py-8 pointer-events-none">

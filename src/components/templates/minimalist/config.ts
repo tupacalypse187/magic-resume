@@ -4,6 +4,7 @@ export const minimalistConfig: ResumeTemplate = {
   id: "minimalist",
   name: "极简模板",
   description: "大面积留白，干净纯粹的排版风格",
+  translationKey: "minimalist",
   thumbnail: "minimalist",
   layout: "minimalist",
   colorScheme: {

@@ -42,8 +42,8 @@ export function UnifiedDateInput({
     setSelectedDate(parseValue(value));
   }, [value]);
 
-  const handleDateChange = (date: CalendarDate | null) => {
-    setSelectedDate(date);
+  const handleDateChange = (date: any) => {
+    setSelectedDate(date as CalendarDate | null);
     if (!date) {
       onChange("");
       return;
@@ -56,7 +56,7 @@ export function UnifiedDateInput({
     <div className={className}>
       <HeroUIProvider locale="ja-JP">
         <DateInput
-          value={isPresent ? null : selectedDate}
+          value={isPresent ? null : selectedDate as any}
           onChange={handleDateChange}
           isRequired={isRequired}
           granularity={"month" as any}

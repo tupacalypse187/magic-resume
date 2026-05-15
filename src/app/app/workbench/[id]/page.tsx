@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/resizable";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { useTranslations } from "@/i18n/compat/client";
 import {
   Tooltip,
   TooltipContent,
@@ -74,7 +75,9 @@ const LayoutControls = memo(
     toggleSidePanel: () => void;
     toggleEditPanel: () => void;
     togglePreviewPanel: () => void;
-  }) => (
+  }) => {
+    const t = useTranslations("previewDock");
+    return (
     <div
       className={cn(
         "absolute bottom-6 left-1/2 -translate-x-1/2",
@@ -98,7 +101,7 @@ const LayoutControls = memo(
           </TooltipTrigger>
           <TooltipContent>
             <p className="text-xs">
-              {sidePanelCollapsed ? "展开侧边栏" : "收起侧边栏"}
+              {sidePanelCollapsed ? t("sidePanel.expand") : t("sidePanel.collapse")}
             </p>
           </TooltipContent>
         </Tooltip>
@@ -124,7 +127,7 @@ const LayoutControls = memo(
           </TooltipTrigger>
           <TooltipContent>
             <p className="text-xs">
-              {editPanelCollapsed ? "展开编辑面板" : "收起编辑面板"}
+              {editPanelCollapsed ? t("editPanel.expand") : t("editPanel.collapse")}
             </p>
           </TooltipContent>
         </Tooltip>
@@ -148,13 +151,14 @@ const LayoutControls = memo(
           </TooltipTrigger>
           <TooltipContent>
             <p className="text-xs">
-              {previewPanelCollapsed ? "展开预览面板" : "收起预览面板"}
+              {previewPanelCollapsed ? t("previewPanel.expand") : t("previewPanel.collapse")}
             </p>
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
     </div>
-  )
+  );
+  }
 );
 
 LayoutControls.displayName = "LayoutControls";

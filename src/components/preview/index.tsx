@@ -231,7 +231,7 @@ const PreviewPanel = React.forwardRef<HTMLDivElement, PreviewPanelProps>(
               }}
               className="relative"
             >
-              <style jsx global>{`
+              <style dangerouslySetInnerHTML={{ __html: `
               .grammar-error {
                 cursor: help;
                 border-bottom: 2px dashed;
@@ -250,7 +250,6 @@ const PreviewPanel = React.forwardRef<HTMLDivElement, PreviewPanelProps>(
                 background-color: rgba(239, 68, 68, 0.1);
               }
 
-              /* 使用属性选择器匹配所有active-*类 */
               .grammar-error[class*="active-"] {
                 animation: highlight 2s ease-in-out;
               }
@@ -269,7 +268,7 @@ const PreviewPanel = React.forwardRef<HTMLDivElement, PreviewPanelProps>(
                   background-color: transparent;
                 }
               }
-            `}</style>
+            `}} />
               <ResumeTemplateComponent data={activeResume} template={template} />
               {contentHeight > 0 && (
                 <>

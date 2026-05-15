@@ -4,6 +4,7 @@ export const elegantConfig: ResumeTemplate = {
   id: "elegant",
   name: "优雅模板",
   description: "居中标题单列设计，具有高级感的分隔线",
+  translationKey: "elegant",
   thumbnail: "elegant",
   layout: "elegant",
   colorScheme: {

@@ -4,6 +4,7 @@ export interface ResumeTemplate {
   id: string;
   name: string;
   description: string;
+  translationKey: string;
   thumbnail: string;
   layout: string;
   colorScheme: {

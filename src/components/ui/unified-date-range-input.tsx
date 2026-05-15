@@ -71,7 +71,7 @@ export function UnifiedDateRangeInput({
       `${d.year}/${d.month.toString().padStart(2, "0")}`;
 
     const startStr = newStart ? format(newStart) : "";
-    const endStr = isPresent ? (value.includes("至今") ? "至今" : "Present") : (newEnd ? format(newEnd) : "");
+    const endStr = isPresent ? "Present" : (newEnd ? format(newEnd) : "");
 
     if (!startStr && !endStr) {
       onChange("");
@@ -86,17 +86,17 @@ export function UnifiedDateRangeInput({
     onChange(`${startStr}${SEPARATOR}${endStr}`);
   };
 
-  const handleStartChange = (newStart: CalendarDate | null) => {
+  const handleStartChange = (newStart: any) => {
     setRange((prev) => {
-      const next = { start: newStart, end: prev.end };
+      const next = { start: newStart as CalendarDate | null, end: prev.end };
       updateValue(next.start, next.end);
       return next;
     });
   };
 
-  const handleEndChange = (newEnd: CalendarDate | null) => {
+  const handleEndChange = (newEnd: any) => {
     setRange((prev) => {
-      const next = { start: prev.start, end: newEnd };
+      const next = { start: prev.start, end: newEnd as CalendarDate | null };
       updateValue(next.start, next.end);
       return next;
     });
@@ -108,7 +108,7 @@ export function UnifiedDateRangeInput({
         <div className="flex items-center gap-2">
           <div className="flex-1">
             <DateInput
-              value={range.start}
+              value={range.start as any}
               onChange={handleStartChange}
               variant="bordered"
               granularity={"month" as any}
@@ -124,7 +124,7 @@ export function UnifiedDateRangeInput({
           <span className="text-muted-foreground">-</span>
           <div className="flex-1 relative">
             <DateInput
-              value={isPresent ? null : range.end}
+              value={isPresent ? null : range.end as any}
               onChange={handleEndChange}
               variant="bordered"
               granularity={"month" as any}

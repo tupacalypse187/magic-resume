@@ -6,6 +6,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 const DATE_RANGE_SEPARATOR = " - ";
+const PRESENT_VALUES = new Set(["至今", "Present", "Now"]);
 
 function parseToDate(dateStr: string): Date | null {
   let year: number | null = null;
@@ -37,6 +38,10 @@ function parseToDate(dateStr: string): Date | null {
 
 export function formatDateString(dateStr: string | undefined, locale: string = "zh"): string {
   if (!dateStr) return "";
+
+  if (PRESENT_VALUES.has(dateStr.trim())) {
+    return locale === "en" ? "Present" : "至今";
+  }
 
   if (dateStr.includes(DATE_RANGE_SEPARATOR)) {
     const [start, end] = dateStr.split(DATE_RANGE_SEPARATOR);

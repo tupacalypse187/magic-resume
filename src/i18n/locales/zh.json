@@ -13,7 +13,8 @@
     "deleteSuccess": "删除成功",
     "deleteModuleConfirm": "确定要删除此模块吗？此操作无法撤销。",
     "configured": "已配置",
-    "notConfigured": "未配置"
+    "notConfigured": "未配置",
+    "notFound": "页面不存在"
   },
   "home": {
     "header": {
@@ -293,6 +294,12 @@
         "title": "布局",
         "addCustomSection": "添加模块",
         "addCustomSectionOption": "添加自定义模块",
+        "addButton": "添加",
+        "untitledSection": "未命名模块",
+        "fieldPlaceholder": "请输入{label}",
+        "skillPlaceholder": "描述你的技能、专长等...",
+        "githubTokenPlaceholder": "请输入github access token",
+        "githubUsernamePlaceholder": "请输入github username",
         "standardSections": {
           "skills": "专业技能",
           "experience": "工作经验",
@@ -362,7 +369,16 @@
       "basicField": "基础字段",
       "customField": "自定义字段",
       "githubContributions": "Github贡献",
+      "fieldPlaceholder": "请输入{label}",
+      "githubTokenPlaceholder": "请输入github access token",
+      "githubUsernamePlaceholder": "请输入github username",
       "layout": "布局",
+      "mobileNav": {
+        "basicInfo": "基本信息",
+        "content": "内容",
+        "style": "样式",
+        "preview": "预览"
+      },
       "layoutLeft": "居左",
       "layoutCenter": "居中",
       "layoutRight": "居右",
@@ -756,7 +772,8 @@
     "error": {
       "configRequired": "请先配置 AI 模型",
       "polishFailed": "润色失败",
-      "applied": "已应用润色内容"
+      "applied": "已应用润色内容",
+      "authFailed": "认证失败（401），请检查 API Key、模型和 API Endpoint 配置。"
     },
     "content": {
       "original": "原始内容",
@@ -798,7 +815,10 @@
     "applied_success": "已应用修改",
     "apply_error": "未找到对应文本，无法自动修改",
     "no_errors_title": "太棒了！",
-    "no_errors_desc": "文档非常完美，没有发现任何错别字或标点错误。"
+    "no_errors_desc": "文档非常完美，没有发现任何错别字或标点错误。",
+    "apiConfigError": "ApiKey 或 模型Id 不正确",
+    "noErrors": "无语法错误",
+    "parseError": "解析AI响应失败: {error}"
   },
   "faqDialog": {
     "title": "常见问题 (FAQ)",

@@ -4,6 +4,7 @@ export const leftRightConfig: ResumeTemplate = {
   id: "left-right",
   name: "模块标题背景色",
   description: "模块标题背景鲜明，突出美观特色",
+  translationKey: "leftRight",
   thumbnail: "leftRight",
   layout: "left-right",
   colorScheme: {

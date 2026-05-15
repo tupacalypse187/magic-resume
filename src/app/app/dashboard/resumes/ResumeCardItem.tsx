@@ -54,8 +54,7 @@ export const ResumeCardItem = ({
     const activeTemplate =
         DEFAULT_TEMPLATES.find((template) => template.id === resume.templateId) ??
         DEFAULT_TEMPLATES[0];
-    const templateNameKey =
-        activeTemplate.id === "left-right" ? "leftRight" : activeTemplate.id;
+    const templateNameKey = activeTemplate.translationKey;
 
     React.useEffect(() => {
         if (!containerRef.current) return;

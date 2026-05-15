@@ -4,6 +4,27 @@ import Mark from "mark.js";
 import { useAIConfigStore } from "@/store/useAIConfigStore";
 import { AI_MODEL_CONFIGS } from "@/config/ai";
 import { cn } from "@/lib/utils";
+import enMessages from "@/i18n/locales/en.json";
+import zhMessages from "@/i18n/locales/zh.json";
+
+function getLocale() {
+  if (typeof document === "undefined") return "zh";
+  return document.cookie
+    .split("; ")
+    .find((row) => row.startsWith("NEXT_LOCALE="))
+    ?.split("=")[1] || "zh";
+}
+
+function t(key: string) {
+  const locale = getLocale();
+  const messages = locale === "en" ? enMessages : zhMessages;
+  const parts = key.split(".");
+  let result: any = messages;
+  for (const part of parts) {
+    result = result?.[part];
+  }
+  return typeof result === "string" ? result : key;
+}
 
 export interface GrammarError {
   context: string;
@@ -150,7 +171,7 @@ export const useGrammarStore = create<GrammarStore>((set, get) => ({
       }
 
       if (data.error?.code === "AuthenticationError") {
-        toast.error("ApiKey 或 模型Id 不正确");
+        toast.error(t("grammarCheck.apiConfigError"));
         throw new Error(data.error.message);
       }
 
@@ -160,7 +181,7 @@ export const useGrammarStore = create<GrammarStore>((set, get) => ({
         const grammarErrors = JSON.parse(aiResponse);
         if (grammarErrors.errors.length === 0) {
           set({ errors: [] });
-          toast.success("无语法错误");
+          toast.success(t("grammarCheck.noErrors"));
           return;
         }
         set({ errors: grammarErrors.errors });
@@ -175,7 +196,7 @@ export const useGrammarStore = create<GrammarStore>((set, get) => ({
           });
         }
       } catch (parseError) {
-        toast.error(`解析AI响应失败: ${parseError}`);
+        toast.error(t("grammarCheck.parseError").replace("{error}", String(parseError)));
         set({ errors: [] });
       }
     } catch (error) {

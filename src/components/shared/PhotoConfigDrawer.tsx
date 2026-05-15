@@ -203,11 +203,7 @@ const PhotoConfigDrawer: React.FC<Props> = ({
       });
       onPhotoChange(url, config);
     } catch (error) {
-      toast.error(
-        t("upload.invalidUrl", {
-          defaultMessage: "图片链接无效或无法访问，请尝试使用其他图片链接",
-        })
-      );
+      toast.error(t("upload.invalidUrl"));
       handleRemovePhoto();
     }
   };
