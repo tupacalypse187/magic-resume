@@ -1,10 +1,11 @@
 import { createServer } from "node:http";
-import { createReadStream, existsSync, statSync } from "node:fs";
+import { createReadStream, existsSync, readFileSync, statSync } from "node:fs";
 import { extname, normalize, resolve } from "node:path";
 import { Readable } from "node:stream";
 import serverEntry from "./dist/server/server.js";
 
 const clientDir = resolve(process.cwd(), "dist/client");
+const aiConfigPath = resolve(process.cwd(), "ai-config.json");
 const port = Number(process.env.PORT || 3000);
 const host = process.env.HOSTNAME || "0.0.0.0";
 
@@ -98,6 +99,21 @@ createServer(async (req, res) => {
     const hostHeader = req.headers.host || `localhost:${port}`;
     const protocol = (req.headers["x-forwarded-proto"] || "http").toString().split(",")[0].trim();
     const url = new URL(req.url || "/", `${protocol}://${hostHeader}`);
+
+    // Serve AI config defaults from file
+    if (url.pathname === "/api/ai-config" && req.method === "GET") {
+      res.setHeader("Content-Type", "application/json; charset=utf-8");
+      res.setHeader("Cache-Control", "no-store");
+      if (existsSync(aiConfigPath)) {
+        const config = readFileSync(aiConfigPath, "utf-8");
+        res.statusCode = 200;
+        res.end(config);
+      } else {
+        res.statusCode = 200;
+        res.end("{}");
+      }
+      return;
+    }
 
     if (tryServeStatic(req, res, url)) return;
 

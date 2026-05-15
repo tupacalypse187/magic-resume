@@ -3,6 +3,7 @@ import { Pencil } from "lucide-react";
 import { motion } from "framer-motion";
 import { useResumeStore } from "@/store/useResumeStore";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "@/i18n/compat/client";
 import BasicPanel from "./basic/BasicPanel";
 import EducationPanel from "./education/EducationPanel";
 import ProjectPanel from "./project/ProjectPanel";
@@ -20,6 +21,7 @@ import {
 
 export function EditPanel() {
   const { activeResume, updateMenuSections } = useResumeStore();
+  const t = useTranslations();
   if (!activeResume) return;
   const { activeSection = "", menuSections = [] } = activeResume || {};
 
@@ -104,7 +106,7 @@ export function EditPanel() {
                       <Pencil size={16} className="text-primary" />
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p>点击文字部分即可聚焦编辑</p>
+                      <p>{t("workbench.editor.clickToFocus")}</p>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>

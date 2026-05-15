@@ -109,6 +109,7 @@ const ProjectItem = ({ project }: { project: Project }) => {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [isUpdating, setIsUpdating] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const t = useTranslations("workbench.projectItem");
 
   const handleVisibilityToggle = useCallback(
     (e: React.MouseEvent) => {
@@ -195,7 +196,7 @@ const ProjectItem = ({ project }: { project: Project }) => {
                 "text-gray-700 dark:text-neutral-200"
               )}
             >
-              {project.name || "未命名项目"}
+              {project.name || t("noName")}
             </h3>
           </div>
           <div className="flex items-center gap-2 ml-4 shrink-0">

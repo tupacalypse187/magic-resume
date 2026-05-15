@@ -9,6 +9,7 @@ import { SidePanel } from "@/components/editor/SidePanel";
 import PreviewPanel from "@/components/preview";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { useTranslations } from "@/i18n/compat/client";
+import { getSectionTitleKey } from "@/utils/sectionTitles";
 
 type TabType = "content" | "style" | "preview";
 
@@ -17,6 +18,12 @@ export function MobileWorkbench() {
   const { activeResume, setActiveSection } = useResumeStore();
   const { activeSection, menuSections } = activeResume || {};
   const t = useTranslations("workbench.basicPanel");
+  const tAll = useTranslations();
+
+  const getSectionTitle = (section: { id: string; title: string }) => {
+    const key = getSectionTitleKey(section.id);
+    return key ? tAll(key) : section.title;
+  };
 
   // 渲染底部导航项
   const renderNavItem = (tab: TabType, icon: React.ReactNode, label: string) => (
@@ -89,7 +96,7 @@ export function MobileWorkbench() {
                           )}
                         >
                           <span className="mr-1.5">{section.icon}</span>
-                          {section.title}
+                          {getSectionTitle(section)}
                         </button>
                       ))}
                   </div>

@@ -505,7 +505,7 @@ export function SidePanel({
                           }
                         }}
                       >
-                        <span className="sr-only">增加</span>
+                        <span className="sr-only">Increase</span>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           width="12"
@@ -532,7 +532,7 @@ export function SidePanel({
                           }
                         }}
                       >
-                        <span className="sr-only">减少</span>
+                        <span className="sr-only">Decrease</span>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           width="12"
@@ -601,7 +601,7 @@ export function SidePanel({
                           }
                         }}
                       >
-                        <span className="sr-only">增加</span>
+                        <span className="sr-only">Increase</span>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           width="12"
@@ -629,7 +629,7 @@ export function SidePanel({
                           }
                         }}
                       >
-                        <span className="sr-only">减少</span>
+                        <span className="sr-only">Decrease</span>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           width="12"
@@ -698,7 +698,7 @@ export function SidePanel({
                           }
                         }}
                       >
-                        <span className="sr-only">增加</span>
+                        <span className="sr-only">Increase</span>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           width="12"
@@ -726,7 +726,7 @@ export function SidePanel({
                           }
                         }}
                       >
-                        <span className="sr-only">减少</span>
+                        <span className="sr-only">Decrease</span>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           width="12"

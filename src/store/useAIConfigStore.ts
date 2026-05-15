@@ -24,6 +24,7 @@ interface AIConfigState {
   setGeminiApiKey: (apiKey: string) => void;
   setGeminiModelId: (modelId: string) => void;
   isConfigured: () => boolean;
+  loadFromFileDefaults: () => Promise<void>;
 }
 
 export const useAIConfigStore = create<AIConfigState>()(
@@ -53,6 +54,33 @@ export const useAIConfigStore = create<AIConfigState>()(
         const state = get();
         const config = AI_MODEL_CONFIGS[state.selectedModel];
         return config.validate(state);
+      },
+      loadFromFileDefaults: async () => {
+        try {
+          const res = await fetch("/api/ai-config");
+          if (!res.ok) return;
+          const defaults = await res.json();
+          if (!defaults || typeof defaults !== "object") return;
+
+          const state = get();
+          const merge = (current: string, fallback: string) =>
+            current || fallback || "";
+
+          set({
+            selectedModel: defaults.selectedModel || state.selectedModel,
+            doubaoApiKey: merge(state.doubaoApiKey, defaults.doubaoApiKey),
+            doubaoModelId: merge(state.doubaoModelId, defaults.doubaoModelId),
+            deepseekApiKey: merge(state.deepseekApiKey, defaults.deepseekApiKey),
+            deepseekModelId: merge(state.deepseekModelId, defaults.deepseekModelId),
+            openaiApiKey: merge(state.openaiApiKey, defaults.openaiApiKey),
+            openaiModelId: merge(state.openaiModelId, defaults.openaiModelId),
+            openaiApiEndpoint: merge(state.openaiApiEndpoint, defaults.openaiApiEndpoint),
+            geminiApiKey: merge(state.geminiApiKey, defaults.geminiApiKey),
+            geminiModelId: merge(state.geminiModelId, defaults.geminiModelId),
+          });
+        } catch {
+          // File defaults not available, that's fine
+        }
       }
     }),
     {

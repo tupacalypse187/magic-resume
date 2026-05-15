@@ -100,6 +100,7 @@ const EducationEditor: React.FC<EducationEditorProps> = ({
 const EducationItem = ({ education }: { education: Education }) => {
   const { updateEducation, deleteEducation } = useResumeStore();
   const dragControls = useDragControls();
+  const t = useTranslations("workbench.educationItem");
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [isUpdating, setIsUpdating] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -182,7 +183,7 @@ const EducationItem = ({ education }: { education: Education }) => {
                     "text-foreground"
                   )}
                 >
-                  {education.school || "未填写学校"}
+                  {education.school || t("noSchool")}
                 </h3>
                 {(education.major || education.degree) && (
                   <p

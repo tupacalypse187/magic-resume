@@ -32,6 +32,7 @@ const PageBreakLine = React.memo(
     // 预览中 #resume-preview 有 padding-top，内容从 pagePadding 位置开始
     // 每页能容纳 contentPerPagePx 高度的内容（与 Puppeteer PDF margin 一致）
     // 第 N 页结束位置 = pagePadding + N * contentPerPagePx
+    const t = useTranslations("workbench.preview");
     const top = pagePadding + pageNumber * contentPerPagePx;
 
     return (
@@ -42,7 +43,7 @@ const PageBreakLine = React.memo(
         <div className="relative w-full">
           <div className="absolute w-full border-t-2 border-dashed border-red-400" />
           <div className="absolute right-0 -top-6 text-xs text-red-500">
-            第{pageNumber}页结束
+            {t("pageBreak", { page: pageNumber })}
           </div>
         </div>
       </div>

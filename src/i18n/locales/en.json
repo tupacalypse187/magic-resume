@@ -347,6 +347,7 @@
         "githubTokenPlaceholder": "Enter GitHub access token",
         "githubUsernamePlaceholder": "Enter GitHub username",
         "standardSections": {
+          "basic": "Profile",
           "skills": "Skills",
           "experience": "Experience",
           "projects": "Projects",
@@ -442,6 +443,37 @@
       "fieldPlaceholder": "Enter {label}",
       "githubTokenPlaceholder": "Enter GitHub access token",
       "githubUsernamePlaceholder": "Enter GitHub username"
+    },
+    "editorHeader": {
+      "resumeTitlePlaceholder": "Resume Title",
+      "untitledResume": "Untitled Resume"
+    },
+    "editor": {
+      "clickToFocus": "Click on text to start editing"
+    },
+    "educationItem": {
+      "noSchool": "No school specified"
+    },
+    "experienceItem": {
+      "noCompany": "No company specified"
+    },
+    "projectItem": {
+      "noName": "Untitled Project"
+    },
+    "customItem": {
+      "title": "Title",
+      "subtitle": "Subtitle",
+      "dateRange": "Date Range",
+      "dateRangePlaceholder": "e.g., 2023.01 - 2024.01",
+      "description": "Description",
+      "descriptionPlaceholder": "Enter description...",
+      "untitledItem": "Untitled Item"
+    },
+    "selfEvaluation": {
+      "placeholder": "Describe your self-evaluation..."
+    },
+    "preview": {
+      "pageBreak": "End of page {page}"
     },
     "mobileNav": {
       "basicInfo": "Profile",

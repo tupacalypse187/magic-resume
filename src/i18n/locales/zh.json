@@ -301,6 +301,7 @@
         "githubTokenPlaceholder": "请输入github access token",
         "githubUsernamePlaceholder": "请输入github username",
         "standardSections": {
+          "basic": "基本信息",
           "skills": "专业技能",
           "experience": "工作经验",
           "projects": "项目经历",
@@ -373,6 +374,37 @@
       "githubTokenPlaceholder": "请输入github access token",
       "githubUsernamePlaceholder": "请输入github username",
       "layout": "布局",
+      "editorHeader": {
+        "resumeTitlePlaceholder": "简历名称",
+        "untitledResume": "未命名简历"
+      },
+      "editor": {
+        "clickToFocus": "点击文字部分即可聚焦编辑"
+      },
+      "educationItem": {
+        "noSchool": "未填写学校"
+      },
+      "experienceItem": {
+        "noCompany": "家里蹲公司"
+      },
+      "projectItem": {
+        "noName": "未命名项目"
+      },
+      "customItem": {
+        "title": "标题",
+        "subtitle": "副标题",
+        "dateRange": "时间范围",
+        "dateRangePlaceholder": "例如: 2023.01 - 2024.01",
+        "description": "详细描述",
+        "descriptionPlaceholder": "请输入详细描述...",
+        "untitledItem": "未命名模块"
+      },
+      "selfEvaluation": {
+        "placeholder": "描述你的自我评价..."
+      },
+      "preview": {
+        "pageBreak": "第{page}页结束"
+      },
       "mobileNav": {
         "basicInfo": "基本信息",
         "content": "内容",

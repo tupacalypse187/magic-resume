@@ -4,6 +4,7 @@ import { Eye, EyeOff, GripVertical, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { MenuSection } from "@/types/resume";
 import { useTranslations } from "@/i18n/compat/client";
+import { getSectionTitleKey } from "@/utils/sectionTitles";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -38,7 +39,12 @@ const LayoutItem = ({
   menuSections
 }: LayoutItemProps) => {
   const dragControls = useDragControls();
-  const t = useTranslations("common");
+  const t = useTranslations();
+
+  const displayTitle = (section: { id: string; title: string }) => {
+    const key = getSectionTitleKey(section.id);
+    return key ? t(key) : section.title;
+  };
 
   if (isBasic) {
     return (
@@ -62,7 +68,7 @@ const LayoutItem = ({
             {item.icon}
           </span>
           <span className={cn("text-sm flex-1 cursor-pointer")}>
-            {item.title}
+            {displayTitle(item)}
           </span>
         </div>
       </div>
@@ -117,7 +123,7 @@ const LayoutItem = ({
           >
             {item.icon}
           </span>
-          <span className="text-sm flex-1">{item.title}</span>
+          <span className="text-sm flex-1">{displayTitle(item)}</span>
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
@@ -153,13 +159,13 @@ const LayoutItem = ({
             </AlertDialogTrigger>
             <AlertDialogContent onClick={(e) => e.stopPropagation()}>
               <AlertDialogHeader>
-                <AlertDialogTitle>{t("delete")} {item.title}</AlertDialogTitle>
+                <AlertDialogTitle>{t("common.delete")} {displayTitle(item)}</AlertDialogTitle>
                 <AlertDialogDescription>
-                  {t("deleteModuleConfirm")}
+                  {t("common.deleteModuleConfirm")}
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel onClick={(e) => e.stopPropagation()}>{t("cancel")}</AlertDialogCancel>
+                <AlertDialogCancel onClick={(e) => e.stopPropagation()}>{t("common.cancel")}</AlertDialogCancel>
                 <AlertDialogAction
                   onClick={(e) => {
                     e.stopPropagation();
@@ -182,7 +188,7 @@ const LayoutItem = ({
                   }}
                   className="bg-gradient-to-r from-rose-500 to-orange-400 hover:from-rose-600 hover:to-orange-500 text-white shadow-sm border-0"
                 >
-                  {t("confirm")}
+                  {t("common.confirm")}
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
