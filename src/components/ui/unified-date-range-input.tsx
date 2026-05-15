@@ -4,6 +4,7 @@ import { HeroUIProvider } from "@heroui/react";
 import { CalendarDate, parseDate } from "@internationalized/date";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { useLocale } from "@/i18n/compat/client";
 
 interface UnifiedDateRangeInputProps {
   value: string;
@@ -57,6 +58,7 @@ export function UnifiedDateRangeInput({
   onChange,
   className,
 }: UnifiedDateRangeInputProps) {
+  const locale = useLocale();
   const [range, setRange] = useState<{ start: CalendarDate | null; end: CalendarDate | null }>(
     () => parseRange(value)
   );
@@ -104,7 +106,7 @@ export function UnifiedDateRangeInput({
 
   return (
     <div className={cn("w-full", className)}>
-      <HeroUIProvider locale="ja-JP">
+      <HeroUIProvider locale={locale === "zh" ? "ja-JP" : "en-US"}>
         <div className="flex items-center gap-2">
           <div className="flex-1">
             <DateInput

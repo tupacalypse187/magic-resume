@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { useResumeStore } from "@/store/useResumeStore";
 import { cn } from "@/lib/utils";
 import { useTranslations } from "@/i18n/compat/client";
+import { getSectionTitleKey } from "@/utils/sectionTitles";
 import BasicPanel from "./basic/BasicPanel";
 import EducationPanel from "./education/EducationPanel";
 import ProjectPanel from "./project/ProjectPanel";
@@ -24,6 +25,10 @@ export function EditPanel() {
   const t = useTranslations();
   if (!activeResume) return;
   const { activeSection = "", menuSections = [] } = activeResume || {};
+
+  const activeSectionData = menuSections?.find((s) => s.id === activeSection);
+  const sectionTitleKey = activeSectionData ? getSectionTitleKey(activeSectionData.id) : null;
+  const displayTitle = sectionTitleKey ? t(sectionTitleKey) : activeSectionData?.title;
 
   const renderFields = () => {
     switch (activeSection) {
@@ -74,19 +79,20 @@ export function EditPanel() {
             {activeSection === "basic" ? (
               <div>
                 <span className="text-lg font-semibold text-primary">
-                  {menuSections?.find((s) => s.id === activeSection)?.title}
+                  {displayTitle}
                 </span>
               </div>
             ) : (
               <>
+                {sectionTitleKey ? (
+                  <span className="flex-1 text-lg font-semibold text-primary">{displayTitle}</span>
+                ) : (
                 <input
                   className={cn(
                     "flex-1 text-lg  font-medium  text-primary border-black  bg-transparent outline-none   pb-1 text-primary"
                   )}
                   type="text"
-                  value={
-                    menuSections?.find((s) => s.id === activeSection)?.title
-                  }
+                  value={activeSectionData?.title || ""}
                   onChange={(e) => {
                     const newMenuSections = menuSections.map((s) => {
                       if (s.id === activeSection) {
@@ -100,6 +106,8 @@ export function EditPanel() {
                     updateMenuSections(newMenuSections);
                   }}
                 />
+                )}
+                {!sectionTitleKey && (
                 <TooltipProvider delayDuration={300}>
                   <Tooltip>
                     <TooltipTrigger>
@@ -110,6 +118,7 @@ export function EditPanel() {
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
+                )}
               </>
             )}
           </div>
