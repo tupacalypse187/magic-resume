@@ -378,6 +378,7 @@ export default function Home() {
       <div className="md:hidden h-[calc(100vh-64px)]">
         <MobileWorkbench />
       </div>
+
     </main>
   );
 }

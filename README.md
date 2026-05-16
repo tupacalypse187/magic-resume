@@ -12,7 +12,7 @@
 
 </div>
 
-Magic Resume is a modern online resume editor that makes creating professional resumes simple and enjoyable. Built with TanStack Start and Framer Motion, it supports real-time preview and custom themes.
+Magic Resume is a modern online resume editor that makes creating professional resumes simple and enjoyable. Built with TanStack Start and Framer Motion, it supports real-time preview, custom themes, and a comprehensive suite of AI-powered features.
 
 ## 📸 Screenshots
 
@@ -21,26 +21,89 @@ Magic Resume is a modern online resume editor that makes creating professional r
 
 ## ✨ Features
 
+### 📝 Core Editor
 - 🚀 Built with TanStack Start
 - 💫 Smooth animations (Framer Motion)
-- 🎨 Custom theme support
-- 📱 Responsive design
+- 🎨 Custom theme support with 12+ preset colors
+- 📱 Responsive design with mobile workbench
 - 🌙 Dark mode
-- 📤 Export to PDF
-- 🔄 Real-time preview
-- 💾 Auto-save
-- 🔒 Local storage
+- 📤 Export to PDF, JSON, and Markdown
+- 🔄 Real-time preview (what you see is what you get)
+- 💾 Auto-save with file system sync
+- 🔒 100% local storage — your data never leaves your device
+
+### 🎯 Templates
+- 📄 8 professionally designed templates: Classic, Two Column, Section Title BG, Timeline, Minimalist, Elegant, Creative, Editorial
+- 🔄 Switch templates instantly without losing content
+- 📐 Per-template spacing and layout controls
+
+### 🤖 AI-Powered Features
+
+Magic Resume integrates deeply with AI to help you build the best possible resume:
+
+#### 🔍 AI Resume Review
+- Full resume analysis with a **0–100 score** across 5 categories:
+  - **Content Quality** — writing clarity, impact, action verbs
+  - **ATS Compatibility** — applicant tracking system optimization
+  - **Keywords** — industry-relevant terms and skills
+  - **Formatting** — consistency, completeness, structure
+  - **Completeness** — missing sections, gaps, areas needing detail
+- **One-click apply** — accept individual fixes or batch-apply selected suggestions
+- **Undo support** — revert any applied fix with a single click
+
+#### 💬 AI Chat Assistant
+- Persistent chat panel with **full resume context** — the AI always knows your resume
+- Conversational refinement — discuss career strategy, brainstorm improvements, ask for rewrites
+- **Saved sessions** — chat history persists across page reloads, organized by resume
+- **Quick actions** — one-tap prompts: "Review my resume", "Improve experience", "Suggest keywords", "Rewrite summary"
+
+#### ✏️ Section-Level AI Actions
+- **Sparkles button** in the section editor header opens AI actions for just that section
+- **Review Section** — focused analysis of a single section
+- **Improve Writing** — AI rewrites for impact and professionalism
+- **Add Keywords** — get industry-specific keyword suggestions
+
+#### 🎨 AI Style Suggestions
+- AI analyzes your resume content and suggests optimal **theme colors, fonts, spacing, and template**
+- Optional target role input — get suggestions tailored to your industry
+- One-click apply style changes
+
+#### 📝 AI Polish (Original)
+- Select any rich text content and let AI rewrite it for maximum impact
+- Streaming response with real-time preview
+- Custom instructions support (e.g., "use more technical terms", "highlight metrics")
+
+#### ✅ AI Grammar Check
+- Detects typos and punctuation errors
+- Highlights errors directly in the resume preview
+- Accept or dismiss each suggestion individually
+
+#### 📄 AI PDF Import
+- Upload a PDF resume and Gemini Vision extracts structured data automatically
+- Maps extracted content into the editor for further refinement
+
+### 🤖 Supported AI Providers
+
+| Provider | Best For |
+|----------|----------|
+| 🟢 **OpenAI** (or compatible) | General purpose, any endpoint |
+| 🟣 **Anthropic (Claude)** | Nuanced writing, detailed feedback |
+| 🔵 **Gemini** | Fast, free tier, PDF import |
+| 🟡 **DeepSeek** | Cost-effective alternative |
+| 🔴 **Doubao (Volcengine)** | Chinese-language optimization |
 
 ## 🛠️ Tech Stack
 
-- TanStack Start
-- TypeScript
-- Motion
-- Tiptap
-- Tailwind CSS
-- Zustand
-- Shadcn/ui
-- Lucide Icons
+- **Framework**: TanStack Start
+- **Language**: TypeScript
+- **Animation**: Framer Motion
+- **Editor**: Tiptap
+- **Styling**: Tailwind CSS + Shadcn/ui
+- **State**: Zustand (with persistence)
+- **Icons**: Lucide React + Remix Icons
+- **AI**: Multi-provider (OpenAI, Anthropic, Gemini, DeepSeek, Doubao)
+- **Markdown**: Streamdown (animated streaming rendering)
+- **Export**: Puppeteer (server-side PDF), html2canvas
 
 ## 🚀 Quick Start
 
@@ -65,30 +128,53 @@ pnpm dev
 
 4. Open browser and visit `http://localhost:3000`
 
+5. Configure AI — go to **Dashboard → AI Config** and enter your API key for any supported provider
+
 ## 📦 Build and Deploy
 
 ```bash
 pnpm build
 ```
 
-
 ## 🐳 Docker Deployment
 
-### Docker Compose
+### Two-stage build for fast rebuilds
 
-1. Ensure you have Docker and Docker Compose installed
+The Docker setup uses a base image for dependencies and a separate app image for source code:
 
-2. Run the following command in the project root directory:
-
+**One-time (or when dependencies change):**
 ```bash
-docker compose up -d
+docker compose build base
 ```
 
-This will:
+**Every code change:**
+```bash
+docker compose up -d --build web
+```
 
-- Automatically build the application image
-- Start the container in the background
+**Full rebuild:**
+```bash
+docker compose build base && docker compose up -d --build web
+```
 
+### AI Configuration
+
+Mount your AI config file as a volume:
+
+```yaml
+volumes:
+  - ./ai-config.json:/app/ai-config.json:ro
+```
+
+Example `ai-config.json`:
+```json
+{
+  "selectedModel": "openai",
+  "openaiApiKey": "sk-...",
+  "openaiModelId": "gpt-4o",
+  "openaiApiEndpoint": "https://api.openai.com/v1"
+}
+```
 
 ## 📝 License and Commercial Use
 
@@ -101,13 +187,19 @@ Please see the [LICENSE](LICENSE) file for detailed terms.
 
 ## 🗺️ Roadmap
 
-- [x] AI-assisted writing
-- [x] Multi-language support
+- [x] AI-assisted writing (polish)
+- [x] Multi-language support (English / Chinese)
+- [x] AI Resume Review with scoring
+- [x] AI Chat Assistant with saved sessions
+- [x] Section-level AI actions
+- [x] AI Style and template suggestions
+- [x] AI Grammar check
+- [x] AI PDF import
+- [x] Custom AI model support (5 providers)
+- [x] Auto one page
+- [x] Docker deployment with fast rebuilds
 - [ ] Support for more resume templates
 - [ ] Support for more export formats
-- [ ] Import PDF, Markdown, etc.
-- [x] Custom model
-- [x] Auto one page
 - [ ] Online resume hosting
 
 ## 📈 Star History

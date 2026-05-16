@@ -303,6 +303,13 @@
       "configureButton": "Configure",
       "errorToast": "Grammar check failed, please try again"
     },
+    "aiReview": {
+      "idle": "AI Resume Review",
+      "checking": "Reviewing..."
+    },
+    "aiChat": {
+      "tooltip": "AI Chat Assistant"
+    },
     "sidePanel": {
       "expand": "Expand Side Panel",
       "collapse": "Collapse Side Panel"
@@ -856,6 +863,93 @@
     "apiConfigError": "API Key or Model ID is incorrect",
     "noErrors": "No grammar errors found",
     "parseError": "Failed to parse AI response: {error}"
+  },
+  "aiReview": {
+    "title": "AI Resume Review",
+    "description": "Found {count} suggestions",
+    "reviewing": "Analyzing your resume...",
+    "noFindings": "No issues found! Your resume looks great.",
+    "apply": "Apply Fix",
+    "applied": "Applied",
+    "applyError": "Could not apply fix automatically",
+    "ignore": "Ignore",
+    "batchApplySuccess": "Applied {count} fixes",
+    "applySelected": "Apply {count} Fixes",
+    "score": {
+      "excellent": "Excellent",
+      "good": "Good",
+      "needsWork": "Needs Work",
+      "poor": "Needs Improvement"
+    },
+    "categories": {
+      "all": "All",
+      "content": "Content",
+      "ats": "ATS",
+      "keywords": "Keywords",
+      "formatting": "Formatting",
+      "completeness": "Completeness"
+    },
+    "confirmApply": {
+      "title": "Apply This Fix?",
+      "description": "This will replace the original text with the AI suggestion.",
+      "original": "Original",
+      "suggested": "Suggested",
+      "confirm": "Apply",
+      "cancel": "Cancel"
+    },
+    "error": {
+      "configRequired": "Please configure AI model first",
+      "reviewFailed": "Review failed, please try again"
+    }
+  },
+  "aiChat": {
+    "title": "AI Resume Assistant",
+    "placeholder": "Ask about your resume...",
+    "send": "Send",
+    "newSession": "New Chat",
+    "deleteSession": "Delete Chat",
+    "renameSession": "Rename Chat",
+    "noSessions": "No chat sessions yet",
+    "sessionsTitle": "Chat History",
+    "thinking": "Thinking...",
+    "quickActions": {
+      "reviewResume": "Review my resume",
+      "improveExperience": "Improve experience",
+      "suggestKeywords": "Suggest keywords",
+      "rewriteSummary": "Rewrite summary"
+    },
+    "error": {
+      "configRequired": "Please configure AI model first",
+      "sendFailed": "Failed to send message"
+    }
+  },
+  "sectionReview": {
+    "trigger": "AI Actions",
+    "review": "Review Section",
+    "improve": "Improve Writing",
+    "rephrase": "Rephrase",
+    "addKeywords": "Add Keywords",
+    "keywordsTitle": "Suggested Keywords",
+    "addSelected": "Add Selected",
+    "noContent": "No content to review in this section"
+  },
+  "aiTemplate": {
+    "title": "AI Style Suggestion",
+    "description": "Get AI-powered style suggestions based on your resume content",
+    "targetRole": "Target Role (optional)",
+    "targetRolePlaceholder": "e.g., Software Engineer",
+    "generate": "Get Suggestions",
+    "generating": "Analyzing...",
+    "rationale": "Why these changes?",
+    "applyStyle": "Apply Style",
+    "tryTemplate": "Try {templateName} Template",
+    "regenerate": "Regenerate",
+    "applied": "Style applied!",
+    "noSuggestion": "Click to get AI style recommendations",
+    "error": {
+      "configRequired": "Please configure AI model first",
+      "failed": "Failed to generate suggestions"
+    }
   },
   "faqDialog": {
     "title": "Frequently Asked Questions (FAQ)",

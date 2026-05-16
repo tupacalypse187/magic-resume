@@ -14,9 +14,10 @@ import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import LayoutSetting from "./layout/LayoutSetting";
 import { useResumeStore } from "@/store/useResumeStore";
+import { AITemplateSuggestCard } from "./template/AITemplateSuggestCard";
+import { SettingCard } from "./SettingCard";
 import { cn } from "@/lib/utils";
 import { THEME_COLORS, MenuSection } from "@/types/resume";
 import { ColorPicker } from "@/components/ui/color-picker";
@@ -29,40 +30,6 @@ import { Plus } from "lucide-react";
 import { STANDARD_MODULES } from "@/config/modules";
 import { DEFAULT_TEMPLATES } from "@/config";
 import { getFontOptions, normalizeFontFamily } from "@/utils/fonts";
-
-function SettingCard({
-  icon: Icon,
-  title,
-  action,
-  children,
-}: {
-  icon: any;
-  title: string;
-  action?: React.ReactNode;
-  children: React.ReactNode;
-}) {
-  return (
-    <Card
-      className={cn(
-        "border shadow-sm",
-        "bg-card border-border shadow-sm"
-      )}
-    >
-      <CardHeader className="p-4 pb-0 flex flex-row items-center justify-between space-y-0">
-        <CardTitle className="flex items-center gap-2 text-base font-medium">
-          <Icon
-            className={cn("w-4 h-4 text-muted-foreground")}
-          />
-          <span className={cn("text-foreground")}>
-            {title}
-          </span>
-        </CardTitle>
-        {action && <div className="ml-auto">{action}</div>}
-      </CardHeader>
-      <CardContent className="p-4">{children}</CardContent>
-    </Card>
-  );
-}
 
 export function SidePanel({
   onSectionCreated,
@@ -804,6 +771,9 @@ export function SidePanel({
             </div>
           </div>
         </SettingCard>
+
+        {/* AI Style Suggestion */}
+        <AITemplateSuggestCard />
       </div>
     </motion.div>
   );

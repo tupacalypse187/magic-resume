@@ -13,6 +13,7 @@ import CustomPanel from "./custom/CustomPanel";
 import SkillPanel from "./skills/SkillPanel";
 import SelfEvaluationPanel from "./self-evaluation/SelfEvaluationPanel";
 import CertificatesPanel from "./certificates/CertificatesPanel";
+import { SectionActionsPopover } from "./review/SectionActionsPopover";
 import {
   Tooltip,
   TooltipContent,
@@ -74,14 +75,13 @@ export function EditPanel() {
             <span className="text-lg">
               {menuSections?.find((s) => s.id === activeSection)?.icon}
             </span>
+            <div className="flex-1 flex items-center gap-1">
 
             {/* 如果是基本信息的展示话展示div */}
             {activeSection === "basic" ? (
-              <div>
-                <span className="text-lg font-semibold text-primary">
-                  {displayTitle}
-                </span>
-              </div>
+              <span className="text-lg font-semibold text-primary">
+                {displayTitle}
+              </span>
             ) : (
               <>
                 {sectionTitleKey ? (
@@ -121,6 +121,8 @@ export function EditPanel() {
                 )}
               </>
             )}
+            </div>
+            <SectionActionsPopover sectionId={activeSection || "basic"} />
           </div>
         </motion.div>
 

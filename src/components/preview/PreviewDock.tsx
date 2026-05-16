@@ -11,7 +11,9 @@ import {
   FileJson,
   Loader2,
   Eye,
-  FileText
+  FileText,
+  ClipboardCheck,
+  MessageSquare
 } from "lucide-react";
 import { RiMarkdownLine } from "@remixicon/react";
 import { toast } from "sonner";
@@ -34,6 +36,11 @@ import { useAIConfigStore } from "@/store/useAIConfigStore";
 import { AI_MODEL_CONFIGS } from "@/config/ai";
 import { useResumeStore } from "@/store/useResumeStore";
 import { useAIConfiguration } from "@/hooks/useAIConfiguration";
+import { useResumeReview } from "@/hooks/useResumeReview";
+import { useReviewStore } from "@/store/useReviewStore";
+import { useChatStore } from "@/store/useChatStore";
+import { ReviewDrawer } from "@/components/editor/review/ReviewDrawer";
+import { ChatPanel } from "@/components/editor/chat/ChatPanel";
 import { FAQDialog } from "./FAQDialog";
 import PdfExport from "@/components/shared/PdfExport";
 
@@ -92,6 +99,8 @@ const PreviewDock = ({
   const router = useRouter();
   const t = useTranslations("previewDock");
   const { checkGrammar, isChecking } = useGrammarCheck();
+  const { startReview, isReviewing } = useResumeReview();
+  const { isOpen: chatOpen, toggleOpen: toggleChat } = useChatStore();
 
   const {
     selectedModel,
@@ -135,6 +144,11 @@ const PreviewDock = ({
       toast.error(t("grammarCheck.errorToast"));
     }
   }, [resumeContentRef, checkConfiguration, checkGrammar, t]);
+
+  const handleAIReview = useCallback(async () => {
+    if (!checkConfiguration()) return;
+    await startReview();
+  }, [checkConfiguration, startReview]);
 
   const handleGoGitHub = () => {
     window.open(GITHUB_REPO_URL, "_blank");
@@ -205,6 +219,56 @@ const PreviewDock = ({
                         ? t("grammarCheck.checking")
                         : t("grammarCheck.idle")}
                     </p>
+                  </TooltipContent>
+                </Tooltip>
+              </DockIcon>
+              <DockIcon>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div
+                      className={cn(
+                        "flex cursor-pointer h-7 w-7 items-center justify-center rounded-lg",
+                        "hover:bg-gray-100/50 dark:hover:bg-neutral-800/50",
+                        "transition-all duration-200",
+                        isReviewing && "animate-pulse"
+                      )}
+                      onClick={handleAIReview}
+                    >
+                      <ClipboardCheck
+                        className={cn("h-4 w-4", isReviewing && "animate-spin")}
+                      />
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent side="left" sideOffset={10}>
+                    <p>
+                      {isReviewing
+                        ? t("aiReview.checking")
+                        : t("aiReview.idle")}
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
+              </DockIcon>
+              <DockIcon>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div
+                      className={cn(
+                        "flex cursor-pointer h-7 w-7 items-center justify-center rounded-lg",
+                        "hover:bg-gray-100/50 dark:hover:bg-neutral-800/50",
+                        "transition-all duration-200",
+                        chatOpen && [
+                          "bg-primary text-primary-foreground",
+                          "hover:bg-primary/90 dark:hover:bg-primary/90",
+                          "shadow-sm"
+                        ]
+                      )}
+                      onClick={toggleChat}
+                    >
+                      <MessageSquare className="h-4 w-4" />
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent side="left" sideOffset={10}>
+                    <p>{t("aiChat.tooltip")}</p>
                   </TooltipContent>
                 </Tooltip>
               </DockIcon>
@@ -408,6 +472,8 @@ const PreviewDock = ({
           <FAQDialog />
         </div>
       </div>
+      <ReviewDrawer />
+      <ChatPanel />
     </>
   );
 };
