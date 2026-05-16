@@ -1,9 +1,19 @@
 
 services:
+  base:
+    build:
+      context: .
+      dockerfile: Dockerfile.base
+    image: magic-resume-base:latest
+    profiles:
+      - base
+
   web:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        BASE_IMAGE: magic-resume-base:latest
     ports:
       - "3000:3000"
     environment:

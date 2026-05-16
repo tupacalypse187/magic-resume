@@ -11,7 +11,11 @@
     "preview": "vite preview",
     "release": "bumpp",
     "generate:template-snapshots": "tsx scripts/generate-template-snapshots.ts",
-    "install:playwright": "playwright install chromium"
+    "install:playwright": "playwright install chromium",
+    "docker:base": "docker compose build base",
+    "docker:build": "docker compose build web",
+    "docker:up": "docker compose up -d --build web",
+    "docker:rebuild": "docker compose build base && docker compose up -d --build web"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
