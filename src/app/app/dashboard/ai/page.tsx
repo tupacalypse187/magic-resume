@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Check, ExternalLink, Sparkles } from "lucide-react";
+import { Check, ExternalLink, Sparkles, Bot } from "lucide-react";
 import { useTranslations } from "@/i18n/compat/client";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -19,6 +19,9 @@ const AISettingsPage = () => {
     openaiApiEndpoint,
     geminiApiKey,
     geminiModelId,
+    anthropicApiKey,
+    anthropicModelId,
+    anthropicApiEndpoint,
     setDoubaoApiKey,
     setDoubaoModelId,
     setDeepseekApiKey,
@@ -27,6 +30,9 @@ const AISettingsPage = () => {
     setOpenaiApiEndpoint,
     setGeminiApiKey,
     setGeminiModelId,
+    setAnthropicApiKey,
+    setAnthropicModelId,
+    setAnthropicApiEndpoint,
     selectedModel,
     setSelectedModel,
   } = useAIConfigStore();
@@ -40,7 +46,7 @@ const AISettingsPage = () => {
 
   const handleApiKeyChange = async (
     e: React.ChangeEvent<HTMLInputElement>,
-    type: "doubao" | "deepseek" | "openai" | "gemini"
+    type: "doubao" | "deepseek" | "openai" | "gemini" | "anthropic"
   ) => {
     const newApiKey = e.target.value;
     if (type === "doubao") {
@@ -49,6 +55,8 @@ const AISettingsPage = () => {
       setDeepseekApiKey(newApiKey);
     } else if (type === "gemini") {
       setGeminiApiKey(newApiKey);
+    } else if (type === "anthropic") {
+      setAnthropicApiKey(newApiKey);
     } else {
       setOpenaiApiKey(newApiKey);
     }
@@ -56,7 +64,7 @@ const AISettingsPage = () => {
 
   const handleModelIdChange = async (
     e: React.ChangeEvent<HTMLInputElement>,
-    type: "doubao" | "deepseek" | "openai" | "gemini"
+    type: "doubao" | "openai" | "gemini" | "anthropic"
   ) => {
     const newModelId = e.target.value;
     if (type === "doubao") {
@@ -65,20 +73,34 @@ const AISettingsPage = () => {
       setOpenaiModelId(newModelId);
     } else if (type === "gemini") {
       setGeminiModelId(newModelId);
+    } else if (type === "anthropic") {
+      setAnthropicModelId(newModelId);
     }
   };
 
   const handleApiEndpointChange = async (
     e: React.ChangeEvent<HTMLInputElement>,
-    type: "openai"
+    type: "openai" | "anthropic"
   ) => {
     const newApiEndpoint = e.target.value;
     if (type === "openai") {
       setOpenaiApiEndpoint(newApiEndpoint);
+    } else if (type === "anthropic") {
+      setAnthropicApiEndpoint(newApiEndpoint);
     }
   };
 
   const models = [
+    {
+      id: "anthropic",
+      name: t("dashboard.settings.ai.anthropic.title"),
+      description: t("dashboard.settings.ai.anthropic.description"),
+      icon: Bot,
+      link: "https://console.anthropic.com/settings/keys",
+      color: "text-orange-500",
+      bgColor: "bg-orange-50 dark:bg-orange-950/50",
+      isConfigured: !!(anthropicApiKey && anthropicModelId),
+    },
     {
       id: "deepseek",
       name: t("dashboard.settings.ai.deepseek.title"),
@@ -88,16 +110,6 @@ const AISettingsPage = () => {
       color: "text-purple-500",
       bgColor: "bg-purple-50 dark:bg-purple-950/50",
       isConfigured: !!deepseekApiKey,
-    },
-    {
-      id: "doubao",
-      name: t("dashboard.settings.ai.doubao.title"),
-      description: t("dashboard.settings.ai.doubao.description"),
-      icon: IconDoubao,
-      link: "https://console.volcengine.com/ark",
-      color: "text-blue-500",
-      bgColor: "bg-blue-50 dark:bg-blue-950/50",
-      isConfigured: !!(doubaoApiKey && doubaoModelId),
     },
     {
       id: "openai",
@@ -118,6 +130,16 @@ const AISettingsPage = () => {
       color: "text-amber-500",
       bgColor: "bg-amber-50 dark:bg-amber-950/50",
       isConfigured: !!(geminiApiKey && geminiModelId),
+    },
+    {
+      id: "doubao",
+      name: t("dashboard.settings.ai.doubao.title"),
+      description: t("dashboard.settings.ai.doubao.description"),
+      icon: IconDoubao,
+      link: "https://console.volcengine.com/ark",
+      color: "text-blue-500",
+      bgColor: "bg-blue-50 dark:bg-blue-950/50",
+      isConfigured: !!(doubaoApiKey && doubaoModelId),
     },
   ];
 
@@ -150,9 +172,9 @@ const AISettingsPage = () => {
                       "shrink-0",
                       isViewing ? "text-primary" : "text-muted-foreground"
                     )}
-                    >
-                      <Icon className="h-5 w-5" />
-                    </div>
+                  >
+                    <Icon className="h-5 w-5" />
+                  </div>
                   <div className="flex-1 min-w-0 flex flex-col items-start">
                     <span
                       className={cn(
@@ -173,10 +195,10 @@ const AISettingsPage = () => {
                     aria-label={`Select ${model.name}`}
                     onClick={() => {
                       setSelectedModel(
-                        model.id as "doubao" | "deepseek" | "openai" | "gemini"
+                        model.id as "doubao" | "deepseek" | "openai" | "gemini" | "anthropic"
                       );
                       setCurrentModel(
-                        model.id as "doubao" | "deepseek" | "openai" | "gemini"
+                        model.id as "doubao" | "deepseek" | "openai" | "gemini" | "anthropic"
                       );
                     }}
                     className={cn(
@@ -236,12 +258,14 @@ const AISettingsPage = () => {
                             ? openaiApiKey
                             : model.id === "gemini"
                             ? geminiApiKey
+                            : model.id === "anthropic"
+                            ? anthropicApiKey
                             : deepseekApiKey
                         }
                         onChange={(e) =>
                           handleApiKeyChange(
                             e,
-                            model.id as "doubao" | "deepseek" | "openai" | "gemini"
+                            model.id as "doubao" | "deepseek" | "openai" | "gemini" | "anthropic"
                           )
                         }
                         type="password"
@@ -318,6 +342,25 @@ const AISettingsPage = () => {
                       </div>
                     )}
 
+                    {model.id === "anthropic" && (
+                      <div className="space-y-4">
+                        <Label className="text-base font-medium">
+                          {t("dashboard.settings.ai.anthropic.modelId")}
+                        </Label>
+                        <Input
+                          value={anthropicModelId}
+                          onChange={(e) => handleModelIdChange(e, "anthropic")}
+                          placeholder="claude-sonnet-4-6"
+                          className={cn(
+                            "h-11",
+                            "bg-white dark:bg-gray-900",
+                            "border-gray-200 dark:border-gray-800",
+                            "focus:ring-2 focus:ring-primary/20"
+                          )}
+                        />
+                      </div>
+                    )}
+
                     {model.id === "openai" && (
                       <div className="space-y-4">
                         <Label className="text-base font-medium">
@@ -329,6 +372,25 @@ const AISettingsPage = () => {
                           placeholder={t(
                             "dashboard.settings.ai.openai.apiEndpoint"
                           )}
+                          className={cn(
+                            "h-11",
+                            "bg-white dark:bg-gray-900",
+                            "border-gray-200 dark:border-gray-800",
+                            "focus:ring-2 focus:ring-primary/20"
+                          )}
+                        />
+                      </div>
+                    )}
+
+                    {model.id === "anthropic" && (
+                      <div className="space-y-4">
+                        <Label className="text-base font-medium">
+                          {t("dashboard.settings.ai.anthropic.apiEndpoint")}
+                        </Label>
+                        <Input
+                          value={anthropicApiEndpoint}
+                          onChange={(e) => handleApiEndpointChange(e, "anthropic")}
+                          placeholder="https://api.anthropic.com"
                           className={cn(
                             "h-11",
                             "bg-white dark:bg-gray-900",

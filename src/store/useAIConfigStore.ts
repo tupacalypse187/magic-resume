@@ -13,6 +13,9 @@ interface AIConfigState {
   openaiApiEndpoint: string;
   geminiApiKey: string;
   geminiModelId: string;
+  anthropicApiKey: string;
+  anthropicModelId: string;
+  anthropicApiEndpoint: string;
   setSelectedModel: (model: AIModelType) => void;
   setDoubaoApiKey: (apiKey: string) => void;
   setDoubaoModelId: (modelId: string) => void;
@@ -23,6 +26,9 @@ interface AIConfigState {
   setOpenaiApiEndpoint: (endpoint: string) => void;
   setGeminiApiKey: (apiKey: string) => void;
   setGeminiModelId: (modelId: string) => void;
+  setAnthropicApiKey: (apiKey: string) => void;
+  setAnthropicModelId: (modelId: string) => void;
+  setAnthropicApiEndpoint: (endpoint: string) => void;
   isConfigured: () => boolean;
   loadFromFileDefaults: () => Promise<void>;
 }
@@ -40,6 +46,9 @@ export const useAIConfigStore = create<AIConfigState>()(
       openaiApiEndpoint: "",
       geminiApiKey: "",
       geminiModelId: "gemini-flash-latest",
+      anthropicApiKey: "",
+      anthropicModelId: "",
+      anthropicApiEndpoint: "",
       setSelectedModel: (model: AIModelType) => set({ selectedModel: model }),
       setDoubaoApiKey: (apiKey: string) => set({ doubaoApiKey: apiKey }),
       setDoubaoModelId: (modelId: string) => set({ doubaoModelId: modelId }),
@@ -50,6 +59,9 @@ export const useAIConfigStore = create<AIConfigState>()(
       setOpenaiApiEndpoint: (endpoint: string) => set({ openaiApiEndpoint: endpoint }),
       setGeminiApiKey: (apiKey: string) => set({ geminiApiKey: apiKey }),
       setGeminiModelId: (modelId: string) => set({ geminiModelId: modelId }),
+      setAnthropicApiKey: (apiKey: string) => set({ anthropicApiKey: apiKey }),
+      setAnthropicModelId: (modelId: string) => set({ anthropicModelId: modelId }),
+      setAnthropicApiEndpoint: (endpoint: string) => set({ anthropicApiEndpoint: endpoint }),
       isConfigured: () => {
         const state = get();
         const config = AI_MODEL_CONFIGS[state.selectedModel];
@@ -77,6 +89,9 @@ export const useAIConfigStore = create<AIConfigState>()(
             openaiApiEndpoint: merge(state.openaiApiEndpoint, defaults.openaiApiEndpoint),
             geminiApiKey: merge(state.geminiApiKey, defaults.geminiApiKey),
             geminiModelId: merge(state.geminiModelId, defaults.geminiModelId),
+            anthropicApiKey: merge(state.anthropicApiKey, defaults.anthropicApiKey),
+            anthropicModelId: merge(state.anthropicModelId, defaults.anthropicModelId),
+            anthropicApiEndpoint: merge(state.anthropicApiEndpoint, defaults.anthropicApiEndpoint),
           });
         } catch {
           // File defaults not available, that's fine

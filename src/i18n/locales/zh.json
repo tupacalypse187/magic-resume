@@ -212,6 +212,13 @@
           "description": "支持润色、语法检查和 PDF 图片识别导入。推荐模型 ID：gemini-flash-latest",
           "apiKey": "Gemini API Key",
           "modelId": "Gemini 模型 ID"
+        },
+        "anthropic": {
+          "title": "Anthropic (Claude)",
+          "description": "Claude 模型，支持文本润色、语法检查和简历编辑。支持自定义 API 端点。",
+          "apiKey": "Anthropic API Key",
+          "modelId": "模型 ID",
+          "apiEndpoint": "API 端点（留空使用默认：https://api.anthropic.com）"
         }
       }
     },

@@ -211,6 +211,13 @@
           "description": "Supports polish, grammar check, and PDF image resume import. Recommended model: gemini-flash-latest",
           "apiKey": "Gemini API Key",
           "modelId": "Gemini Model ID"
+        },
+        "anthropic": {
+          "title": "Anthropic (Claude)",
+          "description": "Claude models for text polish, grammar check, and resume editing. Supports custom API endpoints.",
+          "apiKey": "Anthropic API Key",
+          "modelId": "Model ID",
+          "apiEndpoint": "API Endpoint (leave empty for default: https://api.anthropic.com)"
         }
       }
     },

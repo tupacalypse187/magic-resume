@@ -93,6 +93,35 @@ export const Route = createFileRoute("/api/grammar")({
             });
           }
 
+          if (modelType === "anthropic") {
+            const response = await fetch(modelConfig.url(apiEndpoint), {
+              method: "POST",
+              headers: modelConfig.headers(apiKey),
+              body: JSON.stringify({
+                model: model || modelConfig.defaultModel,
+                max_tokens: 8192,
+                system: systemPrompt,
+                messages: [{ role: "user", content }],
+              })
+            });
+
+            const raw = await response.text();
+            if (!response.ok) {
+              const fallbackMessage = `Upstream API error: ${response.status} ${response.statusText}`;
+              const parsedError = parseUpstreamError(raw, fallbackMessage);
+              return Response.json({ error: parsedError }, { status: response.status });
+            }
+
+            const data = JSON.parse(raw) as {
+              content?: Array<{ type: string; text?: string }>;
+            };
+            const text = data.content?.find((b) => b.type === "text")?.text || "";
+
+            return Response.json({
+              choices: [{ message: { content: text } }],
+            });
+          }
+
           const response = await fetch(modelConfig.url(apiEndpoint), {
             method: "POST",
             headers: modelConfig.headers(apiKey),

@@ -1,4 +1,4 @@
-export type AIModelType = "doubao" | "deepseek" | "openai" | "gemini";
+export type AIModelType = "doubao" | "deepseek" | "openai" | "gemini" | "anthropic";
 
 export interface AIValidationContext {
   doubaoApiKey?: string;
@@ -10,6 +10,9 @@ export interface AIValidationContext {
   openaiApiEndpoint?: string;
   geminiApiKey?: string;
   geminiModelId?: string;
+  anthropicApiKey?: string;
+  anthropicModelId?: string;
+  anthropicApiEndpoint?: string;
 }
 
 export interface AIModelConfig {
@@ -57,5 +60,19 @@ export const AI_MODEL_CONFIGS: Record<AIModelType, AIModelConfig> = {
       "x-goog-api-key": apiKey,
     }),
     validate: (context: AIValidationContext) => !!(context.geminiApiKey && context.geminiModelId),
+  },
+  anthropic: {
+    url: (endpoint?: string) => {
+      const base = (endpoint || "").trim().replace(/\/+$/, "") || "https://api.anthropic.com";
+      return `${base}/v1/messages`;
+    },
+    requiresModelId: true,
+    defaultModel: "claude-sonnet-4-6",
+    headers: (apiKey: string) => ({
+      "Content-Type": "application/json",
+      "x-api-key": apiKey,
+      "anthropic-version": "2023-06-01",
+    }),
+    validate: (context: AIValidationContext) => !!(context.anthropicApiKey && context.anthropicModelId),
   },
 };

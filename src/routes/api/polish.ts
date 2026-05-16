@@ -100,6 +100,80 @@ export const Route = createFileRoute("/api/polish")({
             });
           }
 
+          if (modelType === "anthropic") {
+            const response = await fetch(modelConfig.url(apiEndpoint), {
+              method: "POST",
+              headers: modelConfig.headers(apiKey),
+              body: JSON.stringify({
+                model: model || modelConfig.defaultModel,
+                max_tokens: 8192,
+                system: systemPrompt,
+                messages: [{ role: "user", content }],
+                stream: true,
+              })
+            });
+
+            if (!response.ok) {
+              const rawError = await response.text();
+              const parsedError = parseUpstreamError(rawError, `Upstream API error: ${response.status}`);
+              return Response.json({ error: parsedError }, { status: response.status });
+            }
+
+            const encoder = new TextEncoder();
+            const stream = new ReadableStream({
+              async start(controller) {
+                if (!response.body) { controller.close(); return; }
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let pending = "";
+
+                try {
+                  while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+
+                    pending += decoder.decode(value, { stream: true });
+                    const lines = pending.split(/\r?\n/);
+                    pending = lines.pop() ?? "";
+
+                    for (const line of lines) {
+                      const trimmed = line.trim();
+                      if (!trimmed.startsWith("data:")) continue;
+                      const payload = trimmed.slice(5).trim();
+                      if (!payload) continue;
+
+                      try {
+                        const data = JSON.parse(payload) as {
+                          type?: string;
+                          delta?: { text?: string };
+                          error?: { message?: string };
+                        };
+                        if (data.error?.message) {
+                          controller.error(new Error(data.error.message));
+                          return;
+                        }
+                        if (data.type === "content_block_delta" && data.delta?.text) {
+                          controller.enqueue(encoder.encode(data.delta.text));
+                        }
+                      } catch {}
+                    }
+                  }
+                  controller.close();
+                } catch (error) {
+                  controller.error(error);
+                }
+              }
+            });
+
+            return new Response(stream, {
+              headers: {
+                "Content-Type": "text/event-stream",
+                "Cache-Control": "no-cache",
+                Connection: "keep-alive"
+              }
+            });
+          }
+
           const response = await fetch(modelConfig.url(apiEndpoint), {
             method: "POST",
             headers: modelConfig.headers(apiKey),
