@@ -138,7 +138,24 @@ pnpm build
 
 ## 🐳 Docker Deployment
 
-### Two-stage build for fast rebuilds
+### Prebuilt image
+
+A prebuilt image is published to Docker Hub (stateless, no secrets baked in):
+
+```
+tupacalypse187/magic-resume:2.0.6-ai
+```
+
+```bash
+docker run -d -p 3000:3000 \
+  -v "$PWD/ai-config.json:/app/ai-config.json:ro" \
+  --restart always \
+  tupacalypse187/magic-resume:2.0.6-ai
+```
+
+For Kubernetes / MicroK8s deployment, TLS setup, and the full tag structure, see **[deploy/README.md](./deploy/README.md)**.
+
+### Build from source (two-stage build for fast rebuilds)
 
 The Docker setup uses a base image for dependencies and a separate app image for source code:
 

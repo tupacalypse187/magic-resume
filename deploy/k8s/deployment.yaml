@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: magic-resume
+  namespace: magic-resume
+  labels:
+    app: magic-resume
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate   # stateless, but avoid two pods racing on anything
+  selector:
+    matchLabels:
+      app: magic-resume
+  template:
+    metadata:
+      labels:
+        app: magic-resume
+    spec:
+      containers:
+        - name: magic-resume
+          # Pin to the immutable version+commit tag for reproducible deploys.
+          # Bump this when you push a new image.
+          image: tupacalypse187/magic-resume:2.0.6-ai
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 3000
+          env:
+            - name: NODE_ENV
+              value: production
+          # ai-config.json is mounted read-only from the ai-config Secret.
+          # It only holds DEFAULT provider keys; users override in the browser.
+          volumeMounts:
+            - name: ai-config
+              mountPath: /app/ai-config.json
+              subPath: ai-config.json
+              readOnly: true
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "256Mi"
+            limits:
+              cpu: "1000m"
+              memory: "1Gi"
+          # Container is stateless (data lives in browser localStorage), so a
+          # simple TCP probe is enough.
+          livenessProbe:
+            tcpSocket:
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 30
+          readinessProbe:
+            tcpSocket:
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+      volumes:
+        - name: ai-config
+          secret:
+            secretName: ai-config

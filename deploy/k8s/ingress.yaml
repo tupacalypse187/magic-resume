@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: magic-resume
+  namespace: magic-resume
+  annotations:
+    # Requires the microk8s ingress add-on: `microk8s enable ingress`
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  ingressClassName: public   # microk8s ingress add-on class
+  rules:
+    # Change this to the DNS name you point at aix1pro.
+    - host: magic-resume.yantorno.party
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: magic-resume
+                port:
+                  name: http
+  # Uncomment once you have a TLS cert (see deploy/README.md → TLS section)
+  # tls:
+  #   - hosts:
+  #       - magic-resume.yantorno.party
+  #     secretName: magic-resume-tls
