@@ -102,13 +102,24 @@ Then add a TLS block to `deploy/k8s/ingress.yaml` (a commented template is inclu
 
 ---
 
-## 🔄 Updating the deployment
+## 🔄 Updating the deployment (GitOps via ArgoCD)
 
-When you push a new image tag:
+Production is managed by ArgoCD, which syncs these manifests from the Git repo. The image tag is pinned to an immutable `version-commit` tag, so the full release flow is:
 
-1. Bump the `image:` tag in `deploy/k8s/deployment.yaml`.
-2. `microk8s kubectl -n magic-resume rollout restart deployment/magic-resume`
-3. Watch the rollout: `microk8s kubectl -n magic-resume rollout status deployment/magic-resume`
+1. **Verify locally** — `docker compose up -d --build web`, test at `http://localhost:3000`.
+2. **Publish the new image** to Docker Hub (see "Publishing a new image" below).
+3. **Bump the pinned tag** in `deploy/k8s/deployment.yaml` to the new `version-commit` tag.
+4. **Commit and push** to GitHub.
+5. **ArgoCD syncs** the manifest automatically and rolls out the new pod. No manual `kubectl rollout` needed.
+
+Verify on the cluster if desired:
+
+```bash
+microk8s kubectl -n magic-resume rollout status deployment/magic-resume
+microk8s kubectl -n magic-resume get pods -w
+```
+
+> Convention: the `image:` tag is always the immutable `<version>-<git-sha>` form (e.g. `2.0.6-ai-5474fcd`). Never point production at `latest`.
 
 ---
 
