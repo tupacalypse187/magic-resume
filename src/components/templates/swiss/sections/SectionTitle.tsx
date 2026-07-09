@@ -17,7 +17,9 @@ const SectionTitle = ({ type, title, globalSettings, showTitle = true }: Section
 
     const renderTitle = useMemo(() => {
         if (type === "custom") return title;
-        return menuSections.find((s) => s.id === type)?.title;
+        const section = menuSections.find((s) => s.id === type);
+        if (section?.titleOverride) return section.titleOverride;
+        return section?.title;
     }, [menuSections, type, title]);
 
     const themeColor = globalSettings?.themeColor || "#E31C24"; // 默认瑞士红

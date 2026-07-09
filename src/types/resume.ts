@@ -177,6 +177,10 @@ export interface MenuSection {
   icon: string;
   enabled: boolean;
   order: number;
+  /** For custom sections: which module preset this replicates (drives editor mode + field labels). */
+  baseType?: string;
+  /** For standard sections: a user-set custom name that overrides the i18n default. Per-resume. */
+  titleOverride?: string;
 }
 
 export interface ResumeData {

@@ -247,7 +247,6 @@
         "name": "极简模板",
         "description": "大面积留白，干净纯粹的排版风格"
       },
-
       "elegant": {
         "name": "优雅模板",
         "description": "居中标题单列设计，具有高级感的分隔线"
@@ -315,6 +314,36 @@
           "education": "教育经历",
           "selfEvaluation": "自我评价",
           "certificates": "证书作品"
+        },
+        "addModule": {
+          "title": "添加模块",
+          "description": "复制现有模块,或从空白内容板块开始。",
+          "nameLabel": "模块名称",
+          "cancel": "取消",
+          "create": "创建",
+          "hintContent": "单一富文本板块(类似技能或自我评价)。",
+          "hintList": "带字段标签的条目列表。",
+          "contentPlaceholder": "在此输入内容...",
+          "presets": {
+            "content": "自定义内容",
+            "skills": "技能",
+            "selfEvaluation": "自我评价",
+            "experience": "工作经历",
+            "education": "教育背景",
+            "projects": "项目经历"
+          },
+          "fields": {
+            "position": "职位",
+            "company": "公司",
+            "date": "时间",
+            "details": "详情",
+            "degree": "学位 / 专业",
+            "school": "学校",
+            "dates": "时间",
+            "description": "描述",
+            "projectName": "项目名称",
+            "role": "角色"
+          }
         }
       },
       "theme": {
@@ -588,6 +617,9 @@
       "width": "宽度 (横向拼接占比)",
       "delete": "删除",
       "empty": "暂无图片，请上传或粘贴图片"
+    },
+    "editor": {
+      "resetToDefault": "恢复默认"
     }
   },
   "field": {

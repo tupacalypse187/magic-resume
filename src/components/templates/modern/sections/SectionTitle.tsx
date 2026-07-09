@@ -22,9 +22,11 @@ const SectionTitle = ({ type, title, globalSettings, showTitle = true, variant =
 
     const renderTitle = useMemo(() => {
         if (type === "custom") return title;
+        const section = menuSections.find((s) => s.id === type);
+        if (section?.titleOverride) return section.titleOverride;
         const titleKey = getSectionTitleKey(type);
         if (titleKey) return t(titleKey);
-        return menuSections.find((s) => s.id === type)?.title;
+        return section?.title;
     }, [menuSections, type, title, t]);
 
     const themeColor = globalSettings?.themeColor;

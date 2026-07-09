@@ -1,5 +1,5 @@
 import React from "react";
-import { Pencil } from "lucide-react";
+import { Pencil, RotateCcw } from "lucide-react";
 import { motion } from "framer-motion";
 import { useResumeStore } from "@/store/useResumeStore";
 import { cn } from "@/lib/utils";
@@ -29,7 +29,18 @@ export function EditPanel() {
 
   const activeSectionData = menuSections?.find((s) => s.id === activeSection);
   const sectionTitleKey = activeSectionData ? getSectionTitleKey(activeSectionData.id) : null;
-  const displayTitle = sectionTitleKey ? t(sectionTitleKey) : activeSectionData?.title;
+  const defaultTitle = sectionTitleKey ? t(sectionTitleKey) : activeSectionData?.title;
+  // A user-set override (per-resume) wins over the translated default for standard sections.
+  const displayTitle = activeSectionData?.titleOverride || defaultTitle;
+
+  const updateSectionField = (patch: Partial<typeof activeSectionData>) => {
+    if (!activeSectionData) return;
+    updateMenuSections(
+      menuSections.map((s) =>
+        s.id === activeSection ? { ...s, ...patch } : s
+      )
+    );
+  };
 
   const renderFields = () => {
     switch (activeSection) {
@@ -85,7 +96,38 @@ export function EditPanel() {
             ) : (
               <>
                 {sectionTitleKey ? (
-                  <span className="flex-1 text-lg font-semibold text-primary">{displayTitle}</span>
+                  <div className="flex-1 flex items-center gap-1.5">
+                    <input
+                      className={cn(
+                        "flex-1 text-lg font-semibold text-primary bg-transparent outline-none pb-1 min-w-0",
+                        "placeholder:text-muted-foreground/50"
+                      )}
+                      type="text"
+                      value={activeSectionData?.titleOverride ?? ""}
+                      placeholder={defaultTitle}
+                      onChange={(e) =>
+                        updateSectionField({ titleOverride: e.target.value })
+                      }
+                    />
+                    {activeSectionData?.titleOverride && (
+                      <TooltipProvider delayDuration={300}>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <button
+                              type="button"
+                              onClick={() => updateSectionField({ titleOverride: undefined })}
+                              className="text-muted-foreground hover:text-primary transition-colors"
+                            >
+                              <RotateCcw size={15} />
+                            </button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>{t("workbench.editor.resetToDefault")}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    )}
+                  </div>
                 ) : (
                 <input
                   className={cn(

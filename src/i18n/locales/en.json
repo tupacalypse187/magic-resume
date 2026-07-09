@@ -246,7 +246,6 @@
         "name": "Minimalist",
         "description": "Large amount of whitespace, clean and pure layout style"
       },
-
       "elegant": {
         "name": "Elegant",
         "description": "Centered title single-column design, with a touch of elegance"
@@ -368,6 +367,36 @@
           "education": "Education",
           "selfEvaluation": "Self Evaluation",
           "certificates": "Certificates"
+        },
+        "addModule": {
+          "title": "Add Module",
+          "description": "Replicate an existing module or start from a blank content section.",
+          "nameLabel": "Module name",
+          "cancel": "Cancel",
+          "create": "Create",
+          "hintContent": "A single rich-text section (like Skills or Self Evaluation).",
+          "hintList": "A list of entries with relabeled fields.",
+          "contentPlaceholder": "Write your content here...",
+          "presets": {
+            "content": "Custom Content",
+            "skills": "Skills",
+            "selfEvaluation": "Self Evaluation",
+            "experience": "Experience",
+            "education": "Education",
+            "projects": "Projects"
+          },
+          "fields": {
+            "position": "Position",
+            "company": "Company",
+            "date": "Date",
+            "details": "Details",
+            "degree": "Degree / Major",
+            "school": "School",
+            "dates": "Dates",
+            "description": "Description",
+            "projectName": "Project Name",
+            "role": "Role"
+          }
         }
       },
       "theme": {
@@ -463,16 +492,97 @@
       "untitledResume": "Untitled Resume"
     },
     "editor": {
-      "clickToFocus": "Click on text to start editing"
+      "clickToFocus": "Click on text to start editing",
+      "resetToDefault": "Reset to default"
     },
     "educationItem": {
-      "noSchool": "No school specified"
+      "labels": {
+        "school": "School Name",
+        "degree": "Degree",
+        "major": "Major",
+        "date": "Study Period",
+        "description": "Description",
+        "gpa": "GPA",
+        "location": "Location",
+        "startDate": "Start Date",
+        "endDate": "End Date"
+      },
+      "placeholders": {
+        "school": "Enter school name",
+        "degree": "Select degree",
+        "major": "Enter major",
+        "date": "Enter study time range",
+        "description": "Enter school description",
+        "gpa": "Enter GPA",
+        "location": "Enter location"
+      },
+      "buttons": {
+        "edit": "Edit",
+        "save": "Save",
+        "cancel": "Cancel",
+        "delete": "Delete"
+      },
+      "visibility": {
+        "show": "Show",
+        "hide": "Hide"
+      }
     },
     "experienceItem": {
-      "noCompany": "No company specified"
+      "labels": {
+        "company": "Company Name",
+        "position": "Position",
+        "date": "Employment Period",
+        "details": "Job Responsibilities"
+      },
+      "placeholders": {
+        "company": "Enter company name",
+        "position": "e.g., Frontend Engineer",
+        "date": "e.g., 2020-Present",
+        "details": "Describe your responsibilities and achievements in this role"
+      },
+      "buttons": {
+        "edit": "Edit",
+        "save": "Save",
+        "cancel": "Cancel",
+        "delete": "Delete"
+      },
+      "visibility": {
+        "show": "Show",
+        "hide": "Hide"
+      }
     },
     "projectItem": {
-      "noName": "Untitled Project"
+      "labels": {
+        "name": "Project Name",
+        "role": "Project Role",
+        "date": "Project Period",
+        "description": "Project Description",
+        "technologies": "Tech Stack",
+        "link": "Project Link",
+        "linkLabel": "Display Text"
+      },
+      "placeholders": {
+        "name": "Enter project name",
+        "role": "Your role in the project",
+        "date": "Project time range",
+        "description": "Briefly describe project background and goals",
+        "technologies": "Technologies and tools used",
+        "link": "Project link",
+        "linkLabel": "Display text"
+      },
+      "hints": {
+        "linkLabel": "If display text is empty, the domain or full URL will be shown automatically. Only http:// and https:// links are supported."
+      },
+      "buttons": {
+        "edit": "Edit",
+        "save": "Save",
+        "cancel": "Cancel",
+        "delete": "Delete"
+      },
+      "visibility": {
+        "show": "Show",
+        "hide": "Hide"
+      }
     },
     "customItem": {
       "title": "Title",
@@ -511,30 +621,6 @@
         "details": "job responsibilities and achievements"
       }
     },
-    "experienceItem": {
-      "labels": {
-        "company": "Company Name",
-        "position": "Position",
-        "date": "Employment Period",
-        "details": "Job Responsibilities"
-      },
-      "placeholders": {
-        "company": "Enter company name",
-        "position": "e.g., Frontend Engineer",
-        "date": "e.g., 2020-Present",
-        "details": "Describe your responsibilities and achievements in this role"
-      },
-      "buttons": {
-        "edit": "Edit",
-        "save": "Save",
-        "cancel": "Cancel",
-        "delete": "Delete"
-      },
-      "visibility": {
-        "show": "Show",
-        "hide": "Hide"
-      }
-    },
     "projectPanel": {
       "title": "Project Experience",
       "addButton": "Add Project",
@@ -552,39 +638,6 @@
         "link": "Project link "
       }
     },
-    "projectItem": {
-      "labels": {
-        "name": "Project Name",
-        "role": "Project Role",
-        "date": "Project Period",
-        "description": "Project Description",
-        "technologies": "Tech Stack",
-        "link": "Project Link",
-        "linkLabel": "Display Text"
-      },
-      "placeholders": {
-        "name": "Enter project name",
-        "role": "Your role in the project",
-        "date": "Project time range",
-        "description": "Briefly describe project background and goals",
-        "technologies": "Technologies and tools used",
-        "link": "Project link",
-        "linkLabel": "Display text"
-      },
-      "hints": {
-        "linkLabel": "If display text is empty, the domain or full URL will be shown automatically. Only http:// and https:// links are supported."
-      },
-      "buttons": {
-        "edit": "Edit",
-        "save": "Save",
-        "cancel": "Cancel",
-        "delete": "Delete"
-      },
-      "visibility": {
-        "show": "Show",
-        "hide": "Hide"
-      }
-    },
     "educationPanel": {
       "title": "Education",
       "addButton": "Add Education",
@@ -599,38 +652,6 @@
         "degree": "Select degree",
         "major": "Enter major",
         "date": "Enter study period"
-      }
-    },
-    "educationItem": {
-      "labels": {
-        "school": "School Name",
-        "degree": "Degree",
-        "major": "Major",
-        "date": "Study Period",
-        "description": "Description",
-        "gpa": "GPA",
-        "location": "Location",
-        "startDate": "Start Date",
-        "endDate": "End Date"
-      },
-      "placeholders": {
-        "school": "Enter school name",
-        "degree": "Select degree",
-        "major": "Enter major",
-        "date": "Enter study time range",
-        "description": "Enter school description",
-        "gpa": "Enter GPA",
-        "location": "Enter location"
-      },
-      "buttons": {
-        "edit": "Edit",
-        "save": "Save",
-        "cancel": "Cancel",
-        "delete": "Delete"
-      },
-      "visibility": {
-        "show": "Show",
-        "hide": "Hide"
       }
     },
     "certificatesPanel": {

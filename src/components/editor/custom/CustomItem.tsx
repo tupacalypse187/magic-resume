@@ -13,15 +13,40 @@ import Field from "../Field";
 import { useTranslations } from "@/i18n/compat/client";
 
 import { CustomItem as CustomItemType } from "@/types/resume";
+import { getCustomModulePreset } from "@/config/customModules";
 import ThemeModal from "@/components/shared/ThemeModal";
+
+/** Resolve the label for a custom item field from the section's preset, falling
+ *  back to the generic customItem i18n labels for legacy sections. */
+function useFieldLabels(baseType?: string) {
+  const tGeneric = useTranslations("workbench.customItem");
+  const tLayout = useTranslations("workbench.sidePanel.layout");
+  const preset = getCustomModulePreset(baseType);
+  const byKey = new Map<string, string>();
+  if (preset?.fields) {
+    for (const f of preset.fields) {
+      byKey.set(f.key, tLayout(f.labelKey));
+    }
+  }
+  return {
+    title: byKey.get("title") ?? tGeneric("title"),
+    subtitle: byKey.get("subtitle") ?? tGeneric("subtitle"),
+    dateRange: byKey.get("dateRange") ?? tGeneric("dateRange"),
+    description: byKey.get("description") ?? tGeneric("description"),
+  };
+}
+
 const CustomItemEditor = ({
   item,
   onSave,
+  baseType,
 }: {
   item: CustomItemType;
   onSave: (item: CustomItemType) => void;
+  baseType?: string;
 }) => {
   const t = useTranslations("workbench.customItem");
+  const labels = useFieldLabels(baseType);
   const handleChange = (field: keyof CustomItemType, value: string) => {
     onSave({ ...item, [field]: value });
   };
@@ -31,21 +56,21 @@ const CustomItemEditor = ({
       <div className="grid gap-5">
         <div className="grid grid-cols-2 gap-4">
           <Field
-            label={t("title")}
+            label={labels.title}
             value={item.title}
             onChange={(value) => handleChange("title", value)}
-            placeholder={t("title")}
+            placeholder={labels.title}
           />
           <Field
-            label={t("subtitle")}
+            label={labels.subtitle}
             value={item.subtitle}
             onChange={(value) => handleChange("subtitle", value)}
-            placeholder={t("subtitle")}
+            placeholder={labels.subtitle}
           />
         </div>
 
         <Field
-          label={t("dateRange")}
+          label={labels.dateRange}
           value={item.dateRange}
           onChange={(value) => handleChange("dateRange", value)}
           type="date-range"
@@ -53,7 +78,7 @@ const CustomItemEditor = ({
         />
 
         <Field
-          label={t("description")}
+          label={labels.description}
           value={item.description}
           onChange={(value) => handleChange("description", value)}
           type="editor"
@@ -71,7 +96,10 @@ const CustomItem = ({
   item: CustomItemType;
   sectionId: string;
 }) => {
-  const { updateCustomItem, removeCustomItem } = useResumeStore();
+  const { updateCustomItem, removeCustomItem, activeResume } = useResumeStore();
+  const baseType = activeResume?.menuSections?.find(
+    (s) => s.id === sectionId
+  )?.baseType;
   const dragControls = useDragControls();
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [isUpdating, setIsUpdating] = useState(false);
@@ -227,6 +255,7 @@ const CustomItem = ({
                 />
                 <CustomItemEditor
                   item={item}
+                  baseType={baseType}
                   onSave={(updatedItem) => {
                     updateCustomItem(sectionId, item.id, updatedItem);
                   }}

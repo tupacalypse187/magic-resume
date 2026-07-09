@@ -41,7 +41,8 @@ const LayoutItem = ({
   const dragControls = useDragControls();
   const t = useTranslations();
 
-  const displayTitle = (section: { id: string; title: string }) => {
+  const displayTitle = (section: MenuSection) => {
+    if (section.titleOverride) return section.titleOverride;
     const key = getSectionTitleKey(section.id);
     return key ? t(key) : section.title;
   };

@@ -502,7 +502,7 @@ const BasicPanel: React.FC = () => {
                         />
                       </div>
                       <div className="flex items-center ml-3 mt-4 space-x-2">
-                        <div className="w-[110px]">UseName</div>
+                        <div className="w-[110px]">Username</div>
                         <Input
                           className="flex-1"
                           placeholder={t("githubUsernamePlaceholder")}

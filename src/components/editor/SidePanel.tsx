@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { Layout, Type, SpaceIcon, Palette, Zap } from "lucide-react";
 import debounce from "lodash/debounce";
@@ -28,6 +28,8 @@ import {
 } from "@/components/ui/popover";
 import { Plus } from "lucide-react";
 import { STANDARD_MODULES } from "@/config/modules";
+import { CustomModulePreset } from "@/config/customModules";
+import { AddModuleDialog } from "./AddModuleDialog";
 import { DEFAULT_TEMPLATES } from "@/config";
 import { getFontOptions, normalizeFontFamily } from "@/utils/fonts";
 
@@ -109,18 +111,22 @@ export function SidePanel({
     return `custom-${nextNum}`;
   };
 
-  const handleCreateSection = () => {
+  const [addModuleOpen, setAddModuleOpen] = useState(false);
+  const [popoverOpen, setPopoverOpen] = useState(false);
+
+  const handleCreateFromPreset = (preset: CustomModulePreset, name: string) => {
     const sectionId = generateCustomSectionId(menuSections, customData);
     const newSection = {
       id: sectionId,
-      title: sectionId,
-      icon: "➕",
+      title: name,
+      icon: preset.icon,
       enabled: true,
       order: menuSections.length,
+      baseType: preset.baseType,
     };
 
     updateMenuSections([...menuSections, newSection]);
-    addCustomData(sectionId);
+    addCustomData(sectionId, preset.mode);
     setActiveSection(sectionId);
     onSectionCreated?.();
   };
@@ -146,7 +152,7 @@ export function SidePanel({
           />
 
           <div className="space-y-2 py-4">
-            <Popover>
+            <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
               <PopoverTrigger asChild>
                 <motion.button
                   whileHover={{ scale: 1.01 }}
@@ -173,6 +179,7 @@ export function SidePanel({
                         };
                         updateMenuSections([...menuSections, newSection]);
                         setActiveSection(section.id);
+                        setPopoverOpen(false);
                         onSectionCreated?.();
                       }}
                       className="flex items-center gap-2 px-3 py-2 text-sm rounded-md hover:bg-accent transition-colors text-left"
@@ -187,9 +194,12 @@ export function SidePanel({
                     <div className="h-px bg-border my-1" />
                   )}
 
-                  {/* Add Custom Section */}
+                  {/* Add Custom Module (opens replicate dialog) */}
                   <button
-                    onClick={handleCreateSection}
+                    onClick={() => {
+                      setPopoverOpen(false);
+                      setAddModuleOpen(true);
+                    }}
                     className="flex items-center gap-2 px-3 py-2 text-sm rounded-md hover:bg-accent transition-colors text-left text-muted-foreground italic"
                   >
                     <Plus className="w-4 h-4" />
@@ -775,6 +785,12 @@ export function SidePanel({
         {/* AI Style Suggestion */}
         <AITemplateSuggestCard />
       </div>
+
+      <AddModuleDialog
+        open={addModuleOpen}
+        onOpenChange={setAddModuleOpen}
+        onCreate={handleCreateFromPreset}
+      />
     </motion.div>
   );
 }

@@ -54,7 +54,7 @@ interface ResumeStore {
   toggleSectionVisibility: (sectionId: string) => void;
   setActiveSection: (sectionId: string) => void;
   updateMenuSections: (sections: ResumeData["menuSections"]) => void;
-  addCustomData: (sectionId: string) => void;
+  addCustomData: (sectionId: string, mode?: "content" | "list") => void;
   updateCustomData: (sectionId: string, items: CustomItem[]) => void;
   removeCustomData: (sectionId: string) => void;
   addCustomItem: (sectionId: string) => void;
@@ -615,7 +615,7 @@ export const useResumeStore = create(
         }
       },
 
-      addCustomData: (sectionId) => {
+      addCustomData: (sectionId, mode = "list") => {
         const { activeResumeId } = get();
         if (activeResumeId) {
           const currentResume = get().resumes[activeResumeId];
@@ -626,12 +626,20 @@ export const useResumeStore = create(
                   .find((row) => row.startsWith("NEXT_LOCALE="))
                   ?.split("=")[1] || "zh"
               : "zh";
+          // content mode: a single rich-text body, no item title (so only the
+          // description renders under the section heading).
+          const seedTitle =
+            mode === "content"
+              ? ""
+              : locale === "en"
+                ? "Untitled Section"
+                : "未命名模块";
           const updatedCustomData = {
             ...currentResume.customData,
             [sectionId]: [
               {
                 id: generateUUID(),
-                title: locale === "en" ? "Untitled Section" : "未命名模块",
+                title: seedTitle,
                 subtitle: "",
                 dateRange: "",
                 description: "",
