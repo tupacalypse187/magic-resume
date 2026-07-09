@@ -6,7 +6,6 @@ import { useAIConfiguration } from "@/hooks/useAIConfiguration";
 import { useResumeStore } from "@/store/useResumeStore";
 import { useAIConfigStore } from "@/store/useAIConfigStore";
 import { useReviewStore } from "@/store/useReviewStore";
-import { AI_MODEL_CONFIGS } from "@/config/ai";
 import { extractSectionContent } from "@/utils/sectionExtractor";
 import { ReviewFinding } from "@/types/review";
 import {
@@ -29,35 +28,9 @@ export function SectionActionsPopover({ sectionId }: SectionActionsPopoverProps)
   const [loading, setLoading] = useState(false);
 
   const getAIParams = () => {
-    const {
-      selectedModel, doubaoApiKey, doubaoModelId,
-      deepseekApiKey, deepseekModelId,
-      openaiApiKey, openaiModelId, openaiApiEndpoint,
-      geminiApiKey, geminiModelId,
-      anthropicApiKey, anthropicModelId, anthropicApiEndpoint,
-    } = useAIConfigStore.getState();
-
-    const config = AI_MODEL_CONFIGS[selectedModel];
-    const apiKey = selectedModel === "doubao" ? doubaoApiKey
-      : selectedModel === "openai" ? openaiApiKey
-      : selectedModel === "gemini" ? geminiApiKey
-      : selectedModel === "anthropic" ? anthropicApiKey
-      : deepseekApiKey;
-    const modelId = selectedModel === "doubao" ? doubaoModelId
-      : selectedModel === "openai" ? openaiModelId
-      : selectedModel === "gemini" ? geminiModelId
-      : selectedModel === "anthropic" ? anthropicModelId
-      : deepseekModelId;
-    const endpoint = selectedModel === "openai" ? openaiApiEndpoint
-      : selectedModel === "anthropic" ? anthropicApiEndpoint
-      : undefined;
-
-    return {
-      apiKey,
-      model: config.requiresModelId ? modelId : config.defaultModel,
-      modelType: selectedModel,
-      apiEndpoint: endpoint,
-    };
+    const { apiKey, model, modelType, apiEndpoint, isCustom } =
+      useAIConfigStore.getState().getActiveRequestParams();
+    return { apiKey, model, modelType, apiEndpoint, isCustom };
   };
 
   const handleAction = async (action: "review" | "addKeywords") => {

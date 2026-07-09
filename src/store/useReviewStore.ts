@@ -1,7 +1,6 @@
 import { create } from "zustand";
 import { toast } from "sonner";
 import { useAIConfigStore } from "@/store/useAIConfigStore";
-import { AI_MODEL_CONFIGS } from "@/config/ai";
 import { ReviewFinding } from "@/types/review";
 import enMessages from "@/i18n/locales/en.json";
 import zhMessages from "@/i18n/locales/zh.json";
@@ -95,12 +94,7 @@ export const useReviewStore = create<ReviewStore>((set, get) => ({
   },
 
   reviewResume: async (serializedResume: string) => {
-    const { selectedModel, doubaoApiKey, doubaoModelId, deepseekApiKey, deepseekModelId, openaiApiKey, openaiModelId, openaiApiEndpoint, geminiApiKey, geminiModelId, anthropicApiKey, anthropicModelId, anthropicApiEndpoint } = useAIConfigStore.getState();
-
-    const config = AI_MODEL_CONFIGS[selectedModel];
-    const apiKey = selectedModel === "doubao" ? doubaoApiKey : selectedModel === "openai" ? openaiApiKey : selectedModel === "gemini" ? geminiApiKey : selectedModel === "anthropic" ? anthropicApiKey : deepseekApiKey;
-    const modelId = selectedModel === "doubao" ? doubaoModelId : selectedModel === "openai" ? openaiModelId : selectedModel === "gemini" ? geminiModelId : selectedModel === "anthropic" ? anthropicModelId : deepseekModelId;
-    const endpoint = selectedModel === "openai" ? openaiApiEndpoint : selectedModel === "anthropic" ? anthropicApiEndpoint : undefined;
+    const params = useAIConfigStore.getState().getActiveRequestParams();
 
     set({ isReviewing: true, findings: [], overallScore: null });
 
@@ -110,10 +104,11 @@ export const useReviewStore = create<ReviewStore>((set, get) => ({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           content: serializedResume,
-          apiKey,
-          model: config.requiresModelId ? modelId : config.defaultModel,
-          modelType: selectedModel,
-          apiEndpoint: endpoint,
+          apiKey: params.apiKey,
+          model: params.model,
+          modelType: params.modelType,
+          apiEndpoint: params.apiEndpoint,
+          isCustom: params.isCustom,
         }),
       });
 

@@ -131,7 +131,12 @@
         "importing": "Importing, please wait...",
         "geminiConfigRequired": "Please configure Gemini API Key and Model ID in AI settings first",
         "pdfSuccess": "PDF imported successfully",
-        "pdfError": "PDF import failed. Please check PDF content or Gemini configuration"
+        "pdfError": "PDF import failed. Please check PDF content or Gemini configuration",
+        "markdownTitle": "Import Markdown",
+        "markdownDescription": "Parse a Markdown resume into structured data using your AI provider",
+        "markdownSuccess": "Markdown imported successfully",
+        "markdownError": "Markdown import failed. Please check the file or your AI configuration",
+        "aiConfigRequired": "Please configure an AI provider (API key + model) in AI settings first"
       },
       "notice": {
         "title": "Attention",
@@ -218,6 +223,29 @@
           "apiKey": "Anthropic API Key",
           "modelId": "Model ID",
           "apiEndpoint": "API Endpoint (leave empty for default: https://api.anthropic.com)"
+        },
+        "custom": {
+          "description": "Add your own OpenAI- or Anthropic-compatible endpoint (local or 3rd-party).",
+          "addProvider": "Add Custom Provider",
+          "addTitle": "Add Custom Provider",
+          "preset": "Start from a preset",
+          "name": "Name",
+          "namePlaceholder": "e.g. Local Ollama",
+          "icon": "Icon",
+          "customEmojiPlaceholder": "emoji",
+          "customEmojiHint": "Type any emoji to use as the icon.",
+          "protocol": "Protocol",
+          "protocolOpenaiHint": "OpenAI-compatible Chat Completions endpoint (Ollama, vLLM, Groq, Alibaba, OpenRouter, Azure...).",
+          "protocolAnthropicHint": "Anthropic Messages endpoint (e.g. ZAI GLM Coding Plan).",
+          "apiEndpoint": "API Endpoint",
+          "apiKey": "API Key",
+          "apiKeyPlaceholder": "sk-... (leave empty for local)",
+          "apiKeyHint": "Optional for local servers. Stored in your browser only.",
+          "modelId": "Model ID",
+          "save": "Save",
+          "add": "Add Provider",
+          "cancel": "Cancel",
+          "delete": "Delete"
         }
       }
     },

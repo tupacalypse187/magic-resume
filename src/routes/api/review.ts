@@ -42,12 +42,13 @@ export const Route = createFileRoute("/api/review")({
       POST: async ({ request }) => {
         try {
           const body = await request.json();
-          const { apiKey, model, content, modelType, apiEndpoint } = body as {
+          const { apiKey, model, content, modelType, apiEndpoint, isCustom } = body as {
             apiKey: string;
             model: string;
             content: string;
             modelType: AIModelType;
             apiEndpoint?: string;
+            isCustom?: boolean;
           };
 
           const rawText = await callAIForJSON({
@@ -55,6 +56,7 @@ export const Route = createFileRoute("/api/review")({
             apiKey,
             model,
             apiEndpoint,
+            isCustom,
             systemPrompt: REVIEW_SYSTEM_PROMPT,
             userContent: content,
             temperature: 0.3,

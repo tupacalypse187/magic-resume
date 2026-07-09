@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { ChatMessage, ChatSession } from "@/types/review";
 import { useAIConfigStore } from "@/store/useAIConfigStore";
-import { AI_MODEL_CONFIGS } from "@/config/ai";
+
 import { useResumeStore } from "@/store/useResumeStore";
 import { serializeResumeForAI } from "@/utils/resumeSerializer";
 import enMessages from "@/i18n/locales/en.json";
@@ -159,28 +159,8 @@ export const useChatStore = create<ChatStore>()(
         });
 
         // Prepare AI call
-        const {
-          selectedModel, doubaoApiKey, doubaoModelId,
-          deepseekApiKey, deepseekModelId,
-          openaiApiKey, openaiModelId, openaiApiEndpoint,
-          geminiApiKey, geminiModelId,
-          anthropicApiKey, anthropicModelId, anthropicApiEndpoint,
-        } = useAIConfigStore.getState();
-
-        const config = AI_MODEL_CONFIGS[selectedModel];
-        const apiKey = selectedModel === "doubao" ? doubaoApiKey
-          : selectedModel === "openai" ? openaiApiKey
-          : selectedModel === "gemini" ? geminiApiKey
-          : selectedModel === "anthropic" ? anthropicApiKey
-          : deepseekApiKey;
-        const modelId = selectedModel === "doubao" ? doubaoModelId
-          : selectedModel === "openai" ? openaiModelId
-          : selectedModel === "gemini" ? geminiModelId
-          : selectedModel === "anthropic" ? anthropicModelId
-          : deepseekModelId;
-        const endpoint = selectedModel === "openai" ? openaiApiEndpoint
-          : selectedModel === "anthropic" ? anthropicApiEndpoint
-          : undefined;
+        const params = useAIConfigStore.getState().getActiveRequestParams();
+        const { apiKey, model, modelType, apiEndpoint, isCustom } = params;
 
         // Get current session messages for context
         const currentSession = get().sessions[activeResume.id]?.find((s) => s.id === sessionId);
@@ -220,9 +200,10 @@ export const useChatStore = create<ChatStore>()(
             signal: abortController.signal,
             body: JSON.stringify({
               apiKey,
-              model: config.requiresModelId ? modelId : config.defaultModel,
-              modelType: selectedModel,
-              apiEndpoint: endpoint,
+              model,
+              modelType,
+              apiEndpoint,
+              isCustom,
               resumeContext,
               messages: previousMessages.map((m) => ({
                 role: m.role,

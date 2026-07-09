@@ -54,6 +54,7 @@ export const ResumeWorkbench = () => {
     const [isImporting, setIsImporting] = useState(false);
     const jsonFileInputRef = useRef<HTMLInputElement>(null);
     const pdfFileInputRef = useRef<HTMLInputElement>(null);
+    const markdownFileInputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
         const loadSavedConfig = async () => {
@@ -235,6 +236,70 @@ export const ResumeWorkbench = () => {
         setIsImportDialogOpen(false);
         toast.success(t("dashboard.resumes.importDialog.pdfSuccess"));
         router.push({ to: "/app/workbench/$id", params: { id: resumeId } });
+    };
+
+    // Resolve the active provider's call params (built-in OR user-defined custom).
+    const getSelectedAIParams = () =>
+        useAIConfigStore.getState().getActiveRequestParams();
+
+    const importResumeFromMarkdown = async (file: File) => {
+        const params = getSelectedAIParams();
+        if (!params.apiKey) {
+            toast.error(t("dashboard.resumes.importDialog.aiConfigRequired"));
+            router.push("/app/dashboard/ai");
+            return;
+        }
+
+        const content = await file.text();
+
+        const response = await fetch("/api/markdown-import", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ content, ...params }),
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+            const message = data?.details
+                ? `${data?.error || "Markdown import failed"}\n${data.details}`
+                : data?.error || "Markdown import failed";
+            throw new Error(message);
+        }
+
+        const aiResume = data?.resume;
+        if (!aiResume) {
+            throw new Error("Invalid AI response");
+        }
+
+        const nameWithoutExt = file.name.replace(/\.[^.]+$/, "").trim();
+        const resume = createResumeFromAIResult(aiResume, nameWithoutExt);
+        const resumeId = addResume(resume);
+        setActiveResume(resumeId);
+        setIsImportDialogOpen(false);
+        toast.success(t("dashboard.resumes.importDialog.markdownSuccess"));
+        router.push({ to: "/app/workbench/$id", params: { id: resumeId } });
+    };
+
+    const handleMarkdownFileChange = async (
+        event: React.ChangeEvent<HTMLInputElement>
+    ) => {
+        const file = event.target.files?.[0];
+        event.target.value = "";
+        if (!file || isImporting) return;
+
+        try {
+            setIsImporting(true);
+            await importResumeFromMarkdown(file);
+        } catch (error) {
+            console.error("Import Markdown error:", error);
+            const message =
+                error instanceof Error && error.message
+                    ? error.message
+                    : t("dashboard.resumes.importDialog.markdownError");
+            toast.error(message);
+        } finally {
+            setIsImporting(false);
+        }
     };
 
     const handleJsonFileChange = async (
@@ -441,8 +506,10 @@ export const ResumeWorkbench = () => {
                     onOpenChange={setIsImportDialogOpen}
                     jsonFileInputRef={jsonFileInputRef}
                     pdfFileInputRef={pdfFileInputRef}
+                    markdownFileInputRef={markdownFileInputRef}
                     onJsonFileChange={handleJsonFileChange}
                     onPdfFileChange={handlePdfFileChange}
+                    onMarkdownFileChange={handleMarkdownFileChange}
                 />
             </motion.div>
         </ScrollArea>

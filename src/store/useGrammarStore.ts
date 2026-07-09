@@ -2,7 +2,6 @@ import { create } from "zustand";
 import { toast } from "sonner";
 import Mark from "mark.js";
 import { useAIConfigStore } from "@/store/useAIConfigStore";
-import { AI_MODEL_CONFIGS } from "@/config/ai";
 import { cn } from "@/lib/utils";
 import enMessages from "@/i18n/locales/en.json";
 import zhMessages from "@/i18n/locales/zh.json";
@@ -111,36 +110,7 @@ export const useGrammarStore = create<GrammarStore>((set, get) => ({
     set((state) => ({ highlightKey: state.highlightKey + 1 })),
 
   checkGrammar: async (text: string) => {
-    const {
-      selectedModel,
-      doubaoApiKey,
-      doubaoModelId,
-      deepseekApiKey,
-      deepseekModelId,
-      openaiApiKey,
-      openaiModelId,
-      openaiApiEndpoint,
-      geminiApiKey,
-      geminiModelId
-    } = useAIConfigStore.getState();
-
-    const config = AI_MODEL_CONFIGS[selectedModel];
-    const apiKey =
-      selectedModel === "doubao"
-        ? doubaoApiKey
-        : selectedModel === "openai"
-          ? openaiApiKey
-          : selectedModel === "gemini"
-            ? geminiApiKey
-            : deepseekApiKey;
-    const modelId =
-      selectedModel === "doubao"
-        ? doubaoModelId
-        : selectedModel === "openai"
-          ? openaiModelId
-          : selectedModel === "gemini"
-            ? geminiModelId
-            : deepseekModelId;
+    const params = useAIConfigStore.getState().getActiveRequestParams();
 
     set({ isChecking: true });
 
@@ -152,10 +122,11 @@ export const useGrammarStore = create<GrammarStore>((set, get) => ({
         },
         body: JSON.stringify({
           content: text,
-          apiKey,
-          model: config.requiresModelId ? modelId : config.defaultModel,
-          modelType: selectedModel,
-          apiEndpoint: selectedModel === "openai" ? openaiApiEndpoint : undefined,
+          apiKey: params.apiKey,
+          model: params.model,
+          modelType: params.modelType,
+          apiEndpoint: params.apiEndpoint,
+          isCustom: params.isCustom,
         }),
       });
 

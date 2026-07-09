@@ -24,12 +24,13 @@ export const Route = createFileRoute("/api/grammar")({
       POST: async ({ request }) => {
         try {
           const body = await request.json();
-          const { apiKey, model, content, modelType, apiEndpoint } = body as {
+          const { apiKey, model, content, modelType, apiEndpoint, isCustom } = body as {
             apiKey: string;
             model: string;
             content: string;
             modelType: AIModelType;
             apiEndpoint?: string;
+            isCustom?: boolean;
           };
 
           const modelConfig = AI_MODEL_CONFIGS[modelType as AIModelType];
@@ -127,9 +128,7 @@ export const Route = createFileRoute("/api/grammar")({
             headers: modelConfig.headers(apiKey),
             body: JSON.stringify({
               model: modelConfig.requiresModelId ? model : modelConfig.defaultModel,
-              response_format: {
-                type: "json_object"
-              },
+              ...(isCustom ? {} : { response_format: { type: "json_object" } }),
               messages: [
                 {
                   role: "system",

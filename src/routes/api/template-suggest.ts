@@ -42,11 +42,12 @@ export const Route = createFileRoute("/api/template-suggest")({
       POST: async ({ request }) => {
         try {
           const body = await request.json();
-          const { apiKey, model, modelType, apiEndpoint, resumeContent, currentSettings, currentTemplateId, targetRole } = body as {
+          const { apiKey, model, modelType, apiEndpoint, isCustom, resumeContent, currentSettings, currentTemplateId, targetRole } = body as {
             apiKey: string;
             model: string;
             modelType: AIModelType;
             apiEndpoint?: string;
+            isCustom?: boolean;
             resumeContent: string;
             currentSettings: Record<string, unknown>;
             currentTemplateId: string;
@@ -56,7 +57,7 @@ export const Route = createFileRoute("/api/template-suggest")({
           const userContent = `Current template: ${currentTemplateId}\nCurrent settings: ${JSON.stringify(currentSettings)}\n${targetRole ? `Target role: ${targetRole}\n` : ""}\nResume content:\n${resumeContent}`;
 
           const rawText = await callAIForJSON({
-            modelType, apiKey, model, apiEndpoint,
+            modelType, apiKey, model, apiEndpoint, isCustom,
             systemPrompt: TEMPLATE_SUGGEST_PROMPT,
             userContent,
             temperature: 0.5,

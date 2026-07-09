@@ -132,7 +132,12 @@
         "importing": "正在导入，请稍候...",
         "geminiConfigRequired": "请先在 AI 服务商设置页配置 Gemini API Key 和模型 ID",
         "pdfSuccess": "PDF 导入成功",
-        "pdfError": "PDF 导入失败，请检查 PDF 内容或 Gemini 配置"
+        "pdfError": "PDF 导入失败，请检查 PDF 内容或 Gemini 配置",
+        "markdownTitle": "导入 Markdown",
+        "markdownDescription": "使用你的 AI 提供商将 Markdown 简历解析为结构化数据",
+        "markdownSuccess": "Markdown 导入成功",
+        "markdownError": "Markdown 导入失败,请检查文件或 AI 配置",
+        "aiConfigRequired": "请先在 AI 设置中配置 AI 提供商(API Key 和模型)"
       },
       "notice": {
         "title": "注意",
@@ -219,6 +224,29 @@
           "apiKey": "Anthropic API Key",
           "modelId": "模型 ID",
           "apiEndpoint": "API 端点（留空使用默认：https://api.anthropic.com）"
+        },
+        "custom": {
+          "description": "添加你自己的 OpenAI 或 Anthropic 兼容端点(本地或第三方)。",
+          "addProvider": "添加自定义服务商",
+          "addTitle": "添加自定义服务商",
+          "preset": "从模板开始",
+          "name": "名称",
+          "namePlaceholder": "例如:本地 Ollama",
+          "icon": "图标",
+          "customEmojiPlaceholder": "表情",
+          "customEmojiHint": "输入任意表情作为图标。",
+          "protocol": "协议",
+          "protocolOpenaiHint": "OpenAI 兼容的 Chat Completions 端点(Ollama、vLLM、Groq、阿里、OpenRouter、Azure 等)。",
+          "protocolAnthropicHint": "Anthropic Messages 端点(例如 ZAI GLM Coding Plan)。",
+          "apiEndpoint": "API 端点",
+          "apiKey": "API Key",
+          "apiKeyPlaceholder": "sk-...(本地可留空)",
+          "apiKeyHint": "本地服务可留空。仅保存在你的浏览器中。",
+          "modelId": "模型 ID",
+          "save": "保存",
+          "add": "添加服务商",
+          "cancel": "取消",
+          "delete": "删除"
         }
       }
     },

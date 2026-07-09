@@ -9,6 +9,8 @@ export interface AICallParams {
   systemPrompt: string;
   userContent: string;
   temperature?: number;
+  /** True for user-defined custom providers — omits response_format for compatibility. */
+  isCustom?: boolean;
 }
 
 const parseUpstreamError = (raw: string, fallback: string) => {
@@ -28,7 +30,7 @@ const parseUpstreamError = (raw: string, fallback: string) => {
 };
 
 export async function callAIForJSON(params: AICallParams): Promise<string> {
-  const { modelType, apiKey, model, apiEndpoint, systemPrompt, userContent, temperature = 0 } = params;
+  const { modelType, apiKey, model, apiEndpoint, systemPrompt, userContent, temperature = 0, isCustom } = params;
   const modelConfig = AI_MODEL_CONFIGS[modelType];
   if (!modelConfig) throw new Error("Invalid model type");
 
@@ -72,7 +74,9 @@ export async function callAIForJSON(params: AICallParams): Promise<string> {
     headers: modelConfig.headers(apiKey),
     body: JSON.stringify({
       model: modelConfig.requiresModelId ? model : modelConfig.defaultModel,
-      response_format: { type: "json_object" },
+      // Some local/3rd-party OpenAI-compatible servers reject response_format;
+      // omit it for user-defined custom providers (routes extract JSON anyway).
+      ...(isCustom ? {} : { response_format: { type: "json_object" } }),
       messages: [
         { role: "system", content: systemPrompt },
         { role: "user", content: userContent },

@@ -38,11 +38,12 @@ export const Route = createFileRoute("/api/section-review")({
       POST: async ({ request }) => {
         try {
           const body = await request.json();
-          const { apiKey, model, modelType, apiEndpoint, sectionId, sectionContent, action } = body as {
+          const { apiKey, model, modelType, apiEndpoint, isCustom, sectionId, sectionContent, action } = body as {
             apiKey: string;
             model: string;
             modelType: AIModelType;
             apiEndpoint?: string;
+            isCustom?: boolean;
             sectionId: string;
             sectionContent: string;
             action: "review" | "addKeywords";
@@ -50,7 +51,7 @@ export const Route = createFileRoute("/api/section-review")({
 
           if (action === "addKeywords") {
             const rawText = await callAIForJSON({
-              modelType, apiKey, model, apiEndpoint,
+              modelType, apiKey, model, apiEndpoint, isCustom,
               systemPrompt: ADD_KEYWORDS_PROMPT,
               userContent: sectionContent,
               temperature: 0.3,
@@ -65,7 +66,7 @@ export const Route = createFileRoute("/api/section-review")({
 
           // Default: review action
           const rawText = await callAIForJSON({
-            modelType, apiKey, model, apiEndpoint,
+            modelType, apiKey, model, apiEndpoint, isCustom,
             systemPrompt: SECTION_REVIEW_PROMPT,
             userContent: `Section: ${sectionId}\n\nContent:\n${sectionContent}`,
             temperature: 0.3,

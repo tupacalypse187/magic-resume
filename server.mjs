@@ -9,6 +9,20 @@ const aiConfigPath = resolve(process.cwd(), "ai-config.json");
 const port = Number(process.env.PORT || 3000);
 const host = process.env.HOSTNAME || "0.0.0.0";
 
+/** Parse the CUSTOM_AI_PROVIDERS env var (JSON array) into a sanitized list. */
+const parseCustomProvidersEnv = (raw) => {
+  if (!raw || typeof raw !== "string") return [];
+  try {
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    return parsed.filter(
+      (p) => p && typeof p === "object" && typeof p.id === "string"
+    );
+  } catch {
+    return [];
+  }
+};
+
 const MIME_TYPES = {
   ".css": "text/css; charset=utf-8",
   ".gif": "image/gif",
@@ -100,18 +114,37 @@ createServer(async (req, res) => {
     const protocol = (req.headers["x-forwarded-proto"] || "http").toString().split(",")[0].trim();
     const url = new URL(req.url || "/", `${protocol}://${hostHeader}`);
 
-    // Serve AI config defaults from file
+    // Serve AI config defaults from file + CUSTOM_AI_PROVIDERS env merge.
     if (url.pathname === "/api/ai-config" && req.method === "GET") {
       res.setHeader("Content-Type", "application/json; charset=utf-8");
       res.setHeader("Cache-Control", "no-store");
+
+      let config = {};
       if (existsSync(aiConfigPath)) {
-        const config = readFileSync(aiConfigPath, "utf-8");
-        res.statusCode = 200;
-        res.end(config);
-      } else {
-        res.statusCode = 200;
-        res.end("{}");
+        try {
+          config = JSON.parse(readFileSync(aiConfigPath, "utf-8")) || {};
+        } catch {
+          config = {};
+        }
       }
+
+      // Operators may also ship custom providers via env (JSON array), e.g. for
+      // k8s Secrets. Merge by id, file values first then env overrides.
+      const envProviders = parseCustomProvidersEnv(process.env.CUSTOM_AI_PROVIDERS);
+      if (envProviders.length > 0) {
+        const byId = new Map(
+          (Array.isArray(config.customProviders) ? config.customProviders : []).map(
+            (p) => [p?.id, p]
+          )
+        );
+        for (const p of envProviders) {
+          if (p && typeof p.id === "string") byId.set(p.id, { ...byId.get(p.id), ...p });
+        }
+        config.customProviders = Array.from(byId.values());
+      }
+
+      res.statusCode = 200;
+      res.end(JSON.stringify(config));
       return;
     }
 

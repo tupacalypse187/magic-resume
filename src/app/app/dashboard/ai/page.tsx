@@ -1,13 +1,23 @@
 import { useEffect, useState } from "react";
-import { Check, ExternalLink, Sparkles, Bot } from "lucide-react";
+import { Check, ExternalLink, Sparkles, Bot, Plus } from "lucide-react";
 import { useTranslations } from "@/i18n/compat/client";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import DeepSeekLogo from "@/components/ai/icon/IconDeepseek";
 import IconDoubao from "@/components/ai/icon/IconDoubao";
 import { useAIConfigStore } from "@/store/useAIConfigStore";
 import { cn } from "@/lib/utils";
 import IconOpenAi from "@/components/ai/icon/IconOpenAi";
+import { CustomAIProvider } from "@/config/ai";
+import { ProviderIcon } from "@/components/ai/icon/registry";
+import { CustomProviderEditor } from "./CustomProviderEditor";
 
 const AISettingsPage = () => {
   const {
@@ -35,8 +45,13 @@ const AISettingsPage = () => {
     setAnthropicApiEndpoint,
     selectedModel,
     setSelectedModel,
+    customProviders,
+    addCustomProvider,
+    updateCustomProvider,
+    removeCustomProvider,
   } = useAIConfigStore();
   const [currentModel, setCurrentModel] = useState(selectedModel);
+  const [isAddCustomOpen, setIsAddCustomOpen] = useState(false);
 
   const t = useTranslations();
 
@@ -214,10 +229,101 @@ const AISettingsPage = () => {
                 </div>
               );
             })}
+
+            {customProviders.length > 0 && (
+              <div className="h-px bg-border my-2" />
+            )}
+
+            {customProviders.map((provider) => {
+              const providerKey = `custom:${provider.id}` as typeof currentModel;
+              const isChecked = selectedModel === providerKey;
+              const isViewing = currentModel === providerKey;
+              const isConfigured = !!(provider.apiEndpoint && provider.modelId);
+              return (
+                <div
+                  key={provider.id}
+                  onClick={() => setCurrentModel(providerKey)}
+                  className={cn(
+                    "w-full flex items-center gap-3 px-3 py-3 rounded-lg text-left border",
+                    "transition-all duration-200 cursor-pointer",
+                    "hover:bg-primary/10 hover:border-primary/30",
+                    isViewing ? "bg-primary/10 border-primary/40" : "border-transparent"
+                  )}
+                >
+                  <div className={cn("shrink-0", isViewing ? "text-primary" : "text-muted-foreground")}>
+                    <ProviderIcon icon={provider.icon} className="h-5 w-5" />
+                  </div>
+                  <div className="flex-1 min-w-0 flex flex-col items-start">
+                    <span className={cn("font-medium text-sm truncate w-full", isViewing && "text-primary")}>
+                      {provider.name}
+                    </span>
+                    <span className="text-xs text-muted-foreground truncate w-full">
+                      {isConfigured ? t("common.configured") : t("common.notConfigured")}
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    aria-label={`Select ${provider.name}`}
+                    onClick={() => {
+                      setSelectedModel(providerKey);
+                      setCurrentModel(providerKey);
+                    }}
+                    className={cn(
+                      "h-6 w-6 rounded-md flex items-center justify-center border transition-all shrink-0",
+                      isChecked
+                        ? "bg-primary border-primary text-primary-foreground"
+                        : "bg-transparent border-muted-foreground/40 text-transparent hover:border-primary/40"
+                    )}
+                  >
+                    <Check className="h-4 w-4" />
+                  </button>
+                </div>
+              );
+            })}
+
+            <button
+              type="button"
+              onClick={() => setIsAddCustomOpen(true)}
+              className="w-full flex items-center justify-center gap-2 px-3 py-2.5 mt-1 rounded-lg border border-dashed border-border text-sm text-muted-foreground hover:text-primary hover:border-primary/40 transition-colors"
+            >
+              <Plus className="h-4 w-4" />
+              {t("dashboard.settings.ai.custom.addProvider")}
+            </button>
           </div>
         </div>
 
         <div className="flex-1 max-w-2xl">
+          {typeof currentModel === "string" && currentModel.startsWith("custom:") &&
+            (() => {
+              const provider = customProviders.find(
+                (p) => p.id === currentModel.slice("custom:".length)
+              );
+              if (!provider) return null;
+              return (
+                <div key={provider.id} className="space-y-6">
+                  <div>
+                    <h2 className="text-2xl font-semibold flex items-center gap-2">
+                      <div className="shrink-0 text-primary">
+                        <ProviderIcon icon={provider.icon} className="h-6 w-6" />
+                      </div>
+                      {provider.name}
+                    </h2>
+                    <p className="mt-2 text-muted-foreground">
+                      {t("dashboard.settings.ai.custom.description")}
+                    </p>
+                  </div>
+                  <CustomProviderEditor
+                    provider={provider}
+                    onSave={(values) => updateCustomProvider(provider.id, values)}
+                    onDelete={(id) => {
+                      removeCustomProvider(id);
+                      setCurrentModel("openai");
+                    }}
+                  />
+                </div>
+              );
+            })()}
+
           {models.map(
             (model) =>
               model.id === currentModel && (
@@ -406,6 +512,23 @@ const AISettingsPage = () => {
           )}
         </div>
       </div>
+
+      <Dialog open={isAddCustomOpen} onOpenChange={setIsAddCustomOpen}>
+        <DialogContent className="sm:max-w-[520px] max-h-[85vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>{t("dashboard.settings.ai.custom.addTitle")}</DialogTitle>
+          </DialogHeader>
+          <CustomProviderEditor
+            onSave={(values) => {
+              const id = addCustomProvider(values);
+              setSelectedModel(`custom:${id}` as typeof selectedModel);
+              setCurrentModel(`custom:${id}` as typeof currentModel);
+              setIsAddCustomOpen(false);
+            }}
+            onCancel={() => setIsAddCustomOpen(false)}
+          />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
