@@ -21,7 +21,7 @@ spec:
         - name: magic-resume
           # Pin to the immutable version+commit tag for reproducible deploys.
           # Bump this when you push a new image.
-          image: tupacalypse187/magic-resume:2.0.6-ai-5474fcd
+          image: tupacalypse187/magic-resume:2.0.6-ai-162b391
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
