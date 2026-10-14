@@ -3,12 +3,10 @@
 > with local additions on top:
 >
 > - **AI features** — provider configuration and AI-assisted editing;
->   see the [AI Features Guide](https://github.com/tupacalypse187/magic-resume/blob/fix/i18n-english-translations/AI-FEATURES-GUIDE.md)
->   (on the `fix/i18n-english-translations` branch, pending merge to `main`).
+>   see the [AI Features Guide](./AI-FEATURES-GUIDE.md).
 > - **Lab deployment** — prebuilt image (`tupacalypse187/magic-resume`),
 >   compose setup, and Kubernetes manifests; see the
->   [Deployment Guide](https://github.com/tupacalypse187/magic-resume/blob/fix/i18n-english-translations/deploy/README.md)
->   (same branch, pending merge).
+>   [Deployment Guide](./deploy/README.md).
 >
 > Everything below is the upstream README unless noted otherwise.
 <div align="center">
