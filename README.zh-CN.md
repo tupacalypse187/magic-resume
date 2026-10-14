@@ -15,6 +15,21 @@
 
 Magic Resume 是一个现代化的在线简历编辑器，让创建专业简历变得简单有趣。基于 TanStack Start 和 Motion 构建，支持实时预览和自定义主题。
 
+## 📑 Table of Contents
+
+- [📸 项目截图](#-项目截图)
+- [✨ 特性](#-特性)
+- [🛠️ 技术栈](#️-技术栈)
+- [🚀 快速开始](#-快速开始)
+- [📦 构建打包](#-构建打包)
+- [🐳 Docker 部署](#-docker-部署)
+- [📝 开源协议与商业授权](#-开源协议与商业授权)
+- [🗺️ 路线图](#️-路线图)
+- [📈 Star History](#-star-history)
+- [📞 联系方式](#-联系方式)
+- [🌟 支持项目](#-支持项目)
+- [❤️ 赞助名单](#️-赞助名单)
+
 ## 📸 项目截图
 
 <img width="1920" height="1440" alt="85_1x_shots_so" src="https://github.com/user-attachments/assets/4667e49a-7bf2-4379-9390-725e42799dc7" />
@@ -73,7 +88,7 @@ pnpm build
 
 ## 🐳 Docker 部署
 
-### Docker Compose
+### 🐳 Docker Compose
 
 1. 确保你已经安装了 Docker 和 Docker Compose
 
@@ -126,13 +141,13 @@ docker compose up -d
 
 - 作者：SiYue
 - X: @GuangzhouY81070
-- Discord: 欢迎加入群组 https://discord.gg/9mWgZrW3VN
+- Discord: 欢迎加入群组 [discord.gg/9mWgZrW3VN](https://discord.gg/9mWgZrW3VN)
 - 邮箱：18806723365@163.com
 - 微信群：扫码加入开发交流群
   
 <img src="./images/wechat.jpg" width="200" alt="WeChat Group">
 
-- 项目主页：https://github.com/JOYCEQL/magic-resume
+- 项目主页：[github.com/JOYCEQL/magic-resume](https://github.com/JOYCEQL/magic-resume)
 
 ## 🌟 支持项目
 

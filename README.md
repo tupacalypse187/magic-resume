@@ -25,6 +25,21 @@
 
 Magic Resume is a modern online resume editor that makes creating professional resumes simple and enjoyable. Built with TanStack Start and Framer Motion, it supports real-time preview and custom themes.
 
+## 📑 Table of Contents
+
+- [📸 Screenshots](#-screenshots)
+- [✨ Features](#-features)
+- [🛠️ Tech Stack](#️-tech-stack)
+- [🚀 Quick Start](#-quick-start)
+- [📦 Build and Deploy](#-build-and-deploy)
+- [🐳 Docker Deployment](#-docker-deployment)
+- [📝 License and Commercial Use](#-license-and-commercial-use)
+- [🗺️ Roadmap](#️-roadmap)
+- [📈 Star History](#-star-history)
+- [📞 Contact](#-contact)
+- [🌟 Support](#-support)
+- [❤️ Sponsors](#️-sponsors)
+
 ## 📸 Screenshots
 
 <img width="1920" height="1440" alt="336_1x_shots_so" src="https://github.com/user-attachments/assets/18969a17-06f8-4a4b-94eb-284ba8442620" />
@@ -85,7 +100,7 @@ pnpm build
 
 ## 🐳 Docker Deployment
 
-### Docker Compose
+### 🐳 Docker Compose
 
 1. Ensure you have Docker and Docker Compose installed
 
@@ -137,13 +152,13 @@ You can follow the latest updates via:
 
 - Author: Siyue
 - X: @GuangzhouY81070
-- Discord: Join our community https://discord.gg/9mWgZrW3VN
+- Discord: Join our community [discord.gg/9mWgZrW3VN](https://discord.gg/9mWgZrW3VN)
 - Email: 18806723365@163.com
 - WeChat Group: Scan to join our developer community
 
   <img src="./images/wechat.jpg" width="200" alt="WeChat Group">
 
-- Project Homepage: https://github.com/JOYCEQL/magic-resume
+- Project Homepage: [github.com/JOYCEQL/magic-resume](https://github.com/JOYCEQL/magic-resume)
 
 ## 🌟 Support
 
