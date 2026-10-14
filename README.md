@@ -1,3 +1,14 @@
+> **Fork notice:** This repo is a fork of the upstream
+> [Magic Resume](https://github.com/JOYCEQL/magic-resume) project,
+> with local additions on top:
+>
+> - **AI features** — provider configuration and AI-assisted editing;
+>   see the [AI Features Guide](./AI-FEATURES-GUIDE.md).
+> - **Lab Docker deployment** — prebuilt image
+>   (`tupacalypse187/magic-resume`) and compose setup; see the
+>   [Deployment Guide](./deploy/README.md).
+>
+> Everything below is the upstream README unless noted otherwise.
 <div align="center">
 
 # ✨ Magic Resume ✨
