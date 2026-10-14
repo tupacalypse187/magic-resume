@@ -8,6 +8,7 @@ interface LayoutPanelProps {
   setActiveSection: (id: string) => void;
   toggleSectionVisibility: (id: string) => void;
   updateMenuSections: (sections: MenuSection[]) => void;
+  removeCustomData: (sectionId: string) => void;
   reorderSections: (sections: MenuSection[]) => void;
 }
 
@@ -17,13 +18,14 @@ const LayoutSetting = ({
   setActiveSection,
   toggleSectionVisibility,
   updateMenuSections,
+  removeCustomData,
   reorderSections,
 }: LayoutPanelProps) => {
   const basicSection = menuSections.find((item) => item.id === "basic");
   const draggableSections = menuSections.filter((item) => item.id !== "basic");
 
   return (
-    <div className="space-y-4  rounded-lg dark:bg-neutral-900/30">
+    <div className="space-y-4  rounded-lg dark:bg-card/30">
       {basicSection && (
         <LayoutItem
           item={basicSection}
@@ -32,6 +34,7 @@ const LayoutSetting = ({
           setActiveSection={setActiveSection}
           toggleSectionVisibility={toggleSectionVisibility}
           updateMenuSections={updateMenuSections}
+          removeCustomData={removeCustomData}
           menuSections={menuSections}
         />
       )}
@@ -56,6 +59,7 @@ const LayoutSetting = ({
             setActiveSection={setActiveSection}
             toggleSectionVisibility={toggleSectionVisibility}
             updateMenuSections={updateMenuSections}
+            removeCustomData={removeCustomData}
             menuSections={menuSections}
           />
         ))}

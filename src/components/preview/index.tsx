@@ -1,6 +1,5 @@
 
-import React, { useEffect, useMemo, useState, useRef } from "react";
-import throttle from "lodash/throttle";
+import React, { useEffect, useMemo, useRef } from "react";
 import { toast } from "sonner";
 import { DEFAULT_TEMPLATES } from "@/config";
 import { cn } from "@/lib/utils";
@@ -8,6 +7,7 @@ import { useResumeStore } from "@/store/useResumeStore";
 import { useAutoOnePage } from "@/hooks/useAutoOnePage";
 import { useTranslations } from "@/i18n/compat/client";
 import { normalizeFontFamily } from "@/utils/fonts";
+import { getPageContentHeight, RESUME_LAYOUT_CSS } from "@/utils/resumeLayout";
 import ResumeTemplateComponent from "../templates";
 
 interface PreviewPanelProps {
@@ -80,103 +80,33 @@ const PreviewPanel = React.forwardRef<HTMLDivElement, PreviewPanelProps>(
     const previewRef = useRef<HTMLDivElement>(null);
     const internalResumeContentRef = useRef<HTMLDivElement>(null);
     const resumeContentRef = (ref as React.MutableRefObject<HTMLDivElement>) || internalResumeContentRef;
-    const [contentHeight, setContentHeight] = useState(0);
-
-    const updateContentHeight = () => {
-      if (resumeContentRef.current) {
-        const height = resumeContentRef.current.clientHeight;
-        if (height > 0) {
-          if (height !== contentHeight) {
-            setContentHeight(height);
-          }
-        }
-      }
-    };
-
-    useEffect(() => {
-      const debouncedUpdate = throttle(() => {
-        requestAnimationFrame(() => {
-          updateContentHeight();
-        });
-      }, 100);
-
-      const observer = new MutationObserver(debouncedUpdate);
-
-      if (resumeContentRef.current) {
-        observer.observe(resumeContentRef.current, {
-          childList: true,
-          subtree: true,
-          attributes: true,
-          characterData: true,
-        });
-
-        updateContentHeight();
-      }
-
-      const resizeObserver = new ResizeObserver(debouncedUpdate);
-
-      if (resumeContentRef.current) {
-        resizeObserver.observe(resumeContentRef.current);
-      }
-
-      return () => {
-        observer.disconnect();
-        resizeObserver.disconnect();
-      };
-    }, []);
-
-    useEffect(() => {
-      if (activeResume) {
-        const timer = setTimeout(updateContentHeight, 300);
-        return () => clearTimeout(timer);
-      }
-    }, [activeResume]);
-
     const pagePadding = activeResume?.globalSettings?.pagePadding || 0;
     const autoOnePageEnabled = activeResume?.globalSettings?.autoOnePage || false;
 
-    const { scaleFactor, isScaled, cannotFit } = useAutoOnePage({
-      contentHeight,
+    const { contentHeight, scaleFactor, pageCount, cannotFit } = useAutoOnePage({
+      contentRef: resumeContentRef,
+      content: activeResume,
       pagePadding,
       enabled: autoOnePageEnabled,
     });
 
+    const contentPerPagePx = getPageContentHeight(pagePadding);
+    const pageBreakCount = pageCount - 1;
+    const cannotFitMessage = t("autoOnePage.cannotFit");
+    const cannotFitToastId = `auto-one-page-cannot-fit-${activeResume?.id}`;
+
     useEffect(() => {
-      if (cannotFit) {
-        toast.warning(t("autoOnePage.cannotFit"), {
-          duration: 4000,
-        });
-      }
-    }, [cannotFit, t]);
+      if (!autoOnePageEnabled || !cannotFit) return;
 
-    const { contentPerPagePx, pageBreakCount } = useMemo(() => {
-      const MM_TO_PX = 3.78;
-      const A4_HEIGHT_PX = 297 * MM_TO_PX;
+      toast.warning(cannotFitMessage, {
+        id: cannotFitToastId,
+        duration: 5000,
+      });
 
-      // 与 Puppeteer PDF 导出一致：margin: pagePadding px（上下各一份）
-      // 每页可用内容高度 = A4 总高度 - 上 margin - 下 margin
-      const baseContentPerPage = A4_HEIGHT_PX - 2 * pagePadding;
-
-      // 一页纸模式启用且内容能完美一页时，才隐藏分页线
-      // cannotFit 时内容仍超出一页，需要保留分页线
-      if ((isScaled && !cannotFit) || contentHeight <= 0) {
-        return { contentPerPagePx: baseContentPerPage, pageBreakCount: 0 };
-      }
-
-      // 缩放时，在容器本地坐标系下每页能容纳更多内容
-      // 因为视觉上 effectiveContentPerPage * scaleFactor = baseContentPerPage
-      const effectiveContentPerPage = isScaled
-        ? baseContentPerPage / scaleFactor
-        : baseContentPerPage;
-
-      // contentHeight 包含 #resume-preview 的 padding（上+下）
-      // 实际内容高度 = contentHeight - 2 * pagePadding
-      const actualContentHeight = contentHeight - 2 * pagePadding;
-      const pageCount = Math.max(1, Math.ceil(actualContentHeight / effectiveContentPerPage));
-      const pageBreakCount = Math.max(0, pageCount - 1);
-
-      return { contentPerPagePx: effectiveContentPerPage, pageBreakCount };
-    }, [contentHeight, pagePadding, isScaled, cannotFit, scaleFactor]);
+      return () => {
+        toast.dismiss(cannotFitToastId);
+      };
+    }, [autoOnePageEnabled, cannotFit, cannotFitMessage, cannotFitToastId]);
 
     if (!activeResume) return null;
 
@@ -199,7 +129,7 @@ const PreviewPanel = React.forwardRef<HTMLDivElement, PreviewPanelProps>(
     return (
       <div
         ref={previewRef}
-        className="relative w-full h-full  bg-gray-100"
+        className="relative w-full h-full bg-gray-100 dark:bg-background"
         style={{
           fontFamily: selectedFontFamily,
         }}
@@ -211,23 +141,20 @@ const PreviewPanel = React.forwardRef<HTMLDivElement, PreviewPanelProps>(
               "w-[210mm] min-w-[210mm] min-h-[297mm]",
               "bg-white",
               "shadow-lg",
-              "relative mx-auto"
+              "relative mx-auto self-start"
             )}
           >
             <div
               ref={resumeContentRef}
               id="resume-preview"
+              data-resume-document
+              data-auto-one-page={autoOnePageEnabled}
+              data-page-count={pageCount}
               onClickCapture={handlePreviewClickCapture}
               style={{
                 fontFamily: selectedFontFamily,
-                padding: `${activeResume.globalSettings?.pagePadding}px`,
-                ...(isScaled
-                  ? {
-                    transform: `scale(${scaleFactor})`,
-                    transformOrigin: "top left",
-                    width: `${100 / scaleFactor}%`,
-                  }
-                  : {}),
+                padding: `${pagePadding}px`,
+                width: "100%",
               }}
               className="relative"
             >
@@ -270,10 +197,13 @@ const PreviewPanel = React.forwardRef<HTMLDivElement, PreviewPanelProps>(
                 }
               }
             `}</style>
-              <ResumeTemplateComponent data={activeResume} template={template} />
+              <style>{RESUME_LAYOUT_CSS}</style>
+              <div data-resume-content style={{ width: "100%", display: "flow-root", zoom: scaleFactor }}>
+                <ResumeTemplateComponent data={activeResume} template={template} />
+              </div>
               {contentHeight > 0 && (
                 <>
-                  <div key={`page-breaks-container-${contentHeight}`}>
+                  <div>
                     {Array.from(
                       { length: Math.min(pageBreakCount, 20) },
                       (_, i) => {

@@ -1,3 +1,4 @@
+import PublicationsSection from "../shared/PublicationsSection";
 import React from "react";
 import { ResumeData } from "@/types/resume";
 import { ResumeTemplate } from "@/types/template";
@@ -35,6 +36,12 @@ const EditorialTemplate: React.FC<EditorialTemplateProps> = ({ data, template })
         return <SkillSection skill={data.skillContent} globalSettings={data.globalSettings} />;
       case "selfEvaluation":
         return <SelfEvaluationSection content={data.selfEvaluationContent} globalSettings={data.globalSettings} />;
+      case "publications":
+          return (
+              <PublicationsSection publications={data.publications} globalSettings={data.globalSettings}>
+                  <SectionTitle type="publications" globalSettings={data.globalSettings} />
+              </PublicationsSection>
+          );
       case "certificates":
         return (
           <SectionWrapper sectionId="certificates" className="w-full" style={{ marginTop: `${data.globalSettings?.sectionSpacing || 32}px` }}>
@@ -55,7 +62,7 @@ const EditorialTemplate: React.FC<EditorialTemplateProps> = ({ data, template })
     <div
       className="flex flex-col min-h-[297mm] text-[#1a1a1a] editorial-print-container"
       style={{
-        backgroundColor: colorScheme.background || "#FAF8F5",
+        backgroundColor: colorScheme.background || "#FFFFFF",
         color: colorScheme.text || "#1a1a1a",
         margin: `-${data.globalSettings?.pagePadding || 0}px`,
         padding: `${data.globalSettings?.pagePadding || 0}px`,
