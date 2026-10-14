@@ -27,6 +27,7 @@ Magic Resume is a modern online resume editor that makes creating professional r
 
 ## 📑 Table of Contents
 
+- [🏗️ Architecture](#️-architecture)
 - [📸 Screenshots](#-screenshots)
 - [✨ Features](#-features)
 - [🛠️ Tech Stack](#️-tech-stack)
@@ -39,6 +40,36 @@ Magic Resume is a modern online resume editor that makes creating professional r
 - [📞 Contact](#-contact)
 - [🌟 Support](#-support)
 - [❤️ Sponsors](#️-sponsors)
+
+## 🏗️ Architecture
+
+Magic Resume is a TanStack Start (React + Vite) app: the editor and its live
+preview run in the browser, resume and AI settings live in zustand stores,
+and AI polish calls whichever provider the user configured with their own
+API key. This fork packages the built app as a single Docker image that a
+small Node server serves in the lab.
+
+```mermaid
+flowchart LR
+    Browser["Browser<br/>editor · live preview"] --> App["TanStack Start app<br/>routes · TipTap editor · themes"]
+    App --> Store["zustand stores<br/>resume data · AI config"]
+    App --> Export["Export<br/>PDF · print"]
+    Store -.->|provider + user key| AI["AI providers<br/>OpenAI · DeepSeek · Doubao · Gemini"]
+    Image["Docker image<br/>tupacalypse187/magic-resume"] -->|runs| Server["Node server<br/>server.mjs"]
+    Server -->|serves built app| Browser
+```
+
+| Piece | Where | Role |
+|---|---|---|
+| Web app | `src/routes`, `src/app`, `src/components` | TanStack Router/Start pages — landing, dashboard, editor — with a TipTap rich-text editor, themeable live preview, and Framer Motion |
+| State | `src/store` | zustand stores for the resume data and the AI configuration (`ai-config-storage`) |
+| AI features | `src/config/ai.ts`, `src/hooks/useAIConfiguration.tsx`, `src/lib/server/` | Provider definitions for OpenAI, DeepSeek, Doubao, and Gemini; AI polish/generation calls go out with the user's own API keys |
+| Export | `src/components`, `src/lib` | PDF and print flows (html2pdf.js; Puppeteer/Chromium bundled for rendering) |
+| Packaging | `Dockerfile`, `docker-compose.yml` | Multi-stage pnpm build into a slim Node runner serving `dist` via `server.mjs`; published as `tupacalypse187/magic-resume` by the docker-publish workflow and run in the lab with docker compose |
+
+**Main flow:** open a resume → edit in TipTap with the preview updating
+live → optionally run AI polish against the configured provider → export to
+PDF. In the lab the whole app is just the one container.
 
 ## 📸 Screenshots
 
