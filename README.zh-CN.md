@@ -15,6 +15,21 @@
 
 Magic Resume 是一个现代化的在线简历编辑器，让创建专业简历变得简单有趣。基于 TanStack Start 和 Motion 构建，支持实时预览和自定义主题。
 
+## 📑 Table of Contents
+
+- [📸 项目截图](#-项目截图)
+- [✨ 特性](#-特性)
+- [🛠️ 技术栈](#️-技术栈)
+- [🚀 快速开始](#-快速开始)
+- [📦 构建打包](#-构建打包)
+- [🐳 Docker 部署](#-docker-部署)
+- [📝 开源协议与商业授权](#-开源协议与商业授权)
+- [🗺️ 路线图](#️-路线图)
+- [📈 Star History](#-star-history)
+- [📞 联系方式](#-联系方式)
+- [🌟 支持项目](#-支持项目)
+- [❤️ 赞助名单](#️-赞助名单)
+
 ## 📸 项目截图
 
 <img width="1920" height="1440" alt="85_1x_shots_so" src="https://github.com/user-attachments/assets/4667e49a-7bf2-4379-9390-725e42799dc7" />
@@ -71,9 +86,19 @@ pnpm dev
 pnpm build
 ```
 
+### AI 厂商网络配置
+
+Cloudflare Workers 使用平台原生 `fetch`，无需配置应用层代理。Node.js 或 Docker 部署在无法直连 OpenAI、Gemini、Anthropic 的地区时，可以设置 `AI_PROXY_URL`；同时兼容 `HTTPS_PROXY` 和 `HTTP_PROXY`。
+
+```bash
+AI_PROXY_URL=http://127.0.0.1:7890
+```
+
+DeepSeek、通义千问和豆包保持直连。
+
 ## 🐳 Docker 部署
 
-### Docker Compose
+### 🐳 Docker Compose
 
 1. 确保你已经安装了 Docker 和 Docker Compose
 
@@ -90,12 +115,12 @@ docker compose up -d
 
 
 
-## 📝 开源协议与商业授权
+## 📝 许可协议与使用限制
 
-本项目源代码基于 **Apache 2.0** 协议开源，但附带**严格的商业使用限制**：
+本项目源代码基于 **Apache 2.0** 协议发布，并附带**仅限非商业使用**的额外限制：
 
 - **个人免费**：仅限个人非商业目的（如个人学习交流、制作个人简历）免费使用。
-- **商用需授权**：严禁未经授权的商业化使用。任何组织或个人，若将其作为服务（SaaS/PaaS等）向公众提供以获取利益，或作为企业商业运营使用，或进行二次商业化开发，**无论是否修改源代码，均须获取商业授权**。
+- **禁止商用**：不得将本项目用于任何商业目的，包括将其作为收费或营利性服务（如 SaaS/PaaS）对外提供、用于企业商业运营、转售或进行二次商业化开发，**无论是否修改源代码**。
 
 详情请查看 [LICENSE](LICENSE) 文件。
 
@@ -104,10 +129,10 @@ docker compose up -d
 - [x] AI 辅助编写
 - [x] 多语言支持
 - [ ] 支持更多简历模板
-- [ ] 更多格式导出
+- [x] 更多格式导出
 - [x] 自定义模型
 - [x] 自动一页纸
-- [ ] 导入 PDF, Markdown 等
+- [x] 导入 PDF, Markdown 等
 - [ ] 在线简历托管
 
 ## 📈 Star History
@@ -126,11 +151,11 @@ docker compose up -d
 
 - 作者：SiYue
 - X: @GuangzhouY81070
-- Discord: 欢迎加入群组 https://discord.gg/9mWgZrW3VN
+- Discord: 欢迎加入群组 [discord.gg/9mWgZrW3VN](https://discord.gg/9mWgZrW3VN)
 - 邮箱：18806723365@163.com
   
 
-- 项目主页：https://github.com/JOYCEQL/magic-resume
+- 项目主页：[github.com/JOYCEQL/magic-resume](https://github.com/JOYCEQL/magic-resume)
 
 ## 🌟 支持项目
 

@@ -46,3 +46,6 @@ src/routeTree.gen.ts
 
 # AI config (contains API keys)
 ai-config.json
+# standalone promotional video projects
+/videos/
+/promo-video/

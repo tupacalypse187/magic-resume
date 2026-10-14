@@ -13,6 +13,8 @@ import {
 } from "@/components/ui/dialog";
 
 interface ImportResumeDialogProps {
+  modelLabel: string;
+  onConfigure: () => void;
   open: boolean;
   isImporting: boolean;
   onOpenChange: (open: boolean) => void;
@@ -25,6 +27,8 @@ interface ImportResumeDialogProps {
 }
 
 export const ImportResumeDialog = ({
+  modelLabel,
+  onConfigure,
   open,
   isImporting,
   onOpenChange,
@@ -72,6 +76,7 @@ export const ImportResumeDialog = ({
           <DialogHeader>
             <DialogTitle>{t("dashboard.resumes.importDialog.title")}</DialogTitle>
             <DialogDescription>
+              {t("dashboard.resumes.importDialog.modelLabel", { model: modelLabel })}
             </DialogDescription>
           </DialogHeader>
 
@@ -148,6 +153,10 @@ export const ImportResumeDialog = ({
               </div>
             </button>
           </div>
+
+          <button type="button" onClick={onConfigure} disabled={isImporting} className="text-left text-sm text-primary underline underline-offset-4 disabled:opacity-50">
+            {t("dashboard.resumes.importDialog.configure")}
+          </button>
 
           {isImporting && (
             <DialogFooter className="sm:justify-start">

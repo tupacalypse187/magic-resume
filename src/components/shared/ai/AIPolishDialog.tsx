@@ -146,9 +146,11 @@ export default function AIPolishDialog({
         const { done, value } = await reader.read();
         if (done) break;
 
-        const chunk = decoder.decode(value);
+        const chunk = decoder.decode(value, { stream: true });
         setPolishedContent((prev) => prev + chunk);
       }
+      const tail = decoder.decode();
+      if (tail) setPolishedContent((prev) => prev + tail);
     } catch (error) {
       if (error instanceof Error && error.name === "AbortError") {
         console.log("Polish aborted");
@@ -209,7 +211,7 @@ export default function AIPolishDialog({
       <DialogContent
         className={cn(
           "sm:max-w-[1000px]",
-          "bg-white dark:bg-neutral-900",
+          "bg-white dark:bg-popover",
           "border-neutral-200 dark:border-neutral-800",
           "rounded-2xl shadow-2xl dark:shadow-none"
         )}

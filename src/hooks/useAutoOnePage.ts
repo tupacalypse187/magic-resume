@@ -1,52 +1,85 @@
-import { useMemo } from "react";
-
-const MM_TO_PX = 3.78;
-const A4_HEIGHT_PX = 297 * MM_TO_PX;
-// 最多只允许缩小到 90%，保证文字可读性和美观
-const MIN_SCALE = 0.9;
+import { useLayoutEffect, useState, type RefObject } from "react";
+import {
+  createResumeMeasurement,
+  measureResumeLayout,
+  RESUME_CONTENT_SELECTOR,
+  type ResumeLayout,
+} from "@/utils/resumeLayout";
 
 interface UseAutoOnePageOptions {
-  contentHeight: number;
+  contentRef: RefObject<HTMLDivElement>;
+  content: unknown;
   pagePadding: number;
   enabled: boolean;
 }
 
-interface UseAutoOnePageResult {
-  scaleFactor: number;
-  isScaled: boolean;
-  /** 内容过多，即使缩放到下限也无法完美一页 */
-  cannotFit: boolean;
-}
-
 export function useAutoOnePage({
-  contentHeight,
+  contentRef,
+  content,
   pagePadding,
   enabled,
-}: UseAutoOnePageOptions): UseAutoOnePageResult {
-  return useMemo(() => {
-    if (!enabled || contentHeight <= 0) {
-      return { scaleFactor: 1, isScaled: false, cannotFit: false };
-    }
+}: UseAutoOnePageOptions): ResumeLayout {
+  const [layout, setLayout] = useState<ResumeLayout>({
+    contentHeight: 0,
+    scaleFactor: 1,
+    pageCount: 1,
+    cannotFit: false,
+  });
 
-    // A4 可用内容高度 = A4 总高度 - 上下页边距
-    const availableHeight = A4_HEIGHT_PX - 2 * pagePadding;
+  useLayoutEffect(() => {
+    const element = contentRef.current;
+    if (!element) return;
 
-    // 实际内容高度（去掉 #resume-preview 的上下 padding）
-    const actualContentHeight = contentHeight - 2 * pagePadding;
+    let measurement = createResumeMeasurement(element);
+    let measuredContent = measurement.querySelector<HTMLElement>(RESUME_CONTENT_SELECTOR)!;
+    const displayedContent = element.querySelector<HTMLElement>(RESUME_CONTENT_SELECTOR)!;
+    let needsClone = false;
 
-    if (actualContentHeight <= availableHeight) {
-      // 内容未超出一页，不需要缩放
-      return { scaleFactor: 1, isScaled: false, cannotFit: false };
-    }
+    let frameId: number | undefined;
+    const measure = () => {
+      frameId = undefined;
+      if (needsClone) {
+        observer.unobserve(measuredContent);
+        measurement.remove();
+        measurement = createResumeMeasurement(element);
+        measuredContent = measurement.querySelector<HTMLElement>(RESUME_CONTENT_SELECTOR)!;
+        observer.observe(measuredContent, { box: "border-box" });
+        needsClone = false;
+      }
+      const next = measureResumeLayout(measuredContent, pagePadding, enabled);
+      setLayout((previous) =>
+        previous.contentHeight === next.contentHeight &&
+        previous.scaleFactor === next.scaleFactor &&
+        previous.cannotFit === next.cannotFit &&
+        previous.pageCount === next.pageCount ? previous : next,
+      );
+    };
+    let disposed = false;
+    const scheduleMeasure = () => {
+      if (!disposed && frameId === undefined) frameId = requestAnimationFrame(measure);
+    };
+    const observer = new ResizeObserver(scheduleMeasure);
+    // AnimatePresence may remove exiting children after the React data update.
+    // Observe only content, excluding our own page indicators and zoom attribute.
+    const mutations = new MutationObserver(() => {
+      needsClone = true;
+      scheduleMeasure();
+    });
+    mutations.observe(displayedContent, { childList: true, subtree: true, characterData: true });
+    document.fonts.addEventListener("loadingdone", scheduleMeasure);
+    void document.fonts.ready.then(scheduleMeasure);
+    observer.observe(measuredContent, { box: "border-box" });
+    measure();
 
-    const idealScale = availableHeight / actualContentHeight;
+    return () => {
+      disposed = true;
+      document.fonts.removeEventListener("loadingdone", scheduleMeasure);
+      observer.disconnect();
+      mutations.disconnect();
+      if (frameId !== undefined) cancelAnimationFrame(frameId);
+      measurement.remove();
+    };
+  }, [contentRef, content, pagePadding, enabled]);
 
-    if (idealScale >= MIN_SCALE) {
-      // 在合理范围内，直接缩放
-      return { scaleFactor: idealScale, isScaled: true, cannotFit: false };
-    }
-
-    // 超出合理缩放范围，仍按下限缩放，但标记 cannotFit
-    return { scaleFactor: MIN_SCALE, isScaled: true, cannotFit: true };
-  }, [contentHeight, pagePadding, enabled]);
+  return layout;
 }

@@ -1,5 +1,92 @@
 # Changelog
 
+## v2.0.11
+
+[compare changes](https://github.com/JOYCEQL/magic-resume/compare/v2.0.10...v2.0.11)
+
+### 🩹 Fixes
+
+- Preserve list and heading styles during one-page measurement, and share measured scaling and page capacity across preview, PDF export, and browser printing ([9c18c15](https://github.com/JOYCEQL/magic-resume/commit/9c18c15), [#392](https://github.com/JOYCEQL/magic-resume/issues/392)).
+- Wait for fonts and images before export, and retain pagination when content still exceeds one page at the 90% minimum scale.
+- Restore overflow warning toasts and load Sonner styles through the root route so notifications remain visible after document hydration recovery.
+
+### ✅ Tests
+
+- Add coverage for nine templates, nested lists, preview/PDF page counts, and toast visibility after hydration recovery.
+
+## v2.0.10
+
+[compare changes](https://github.com/JOYCEQL/magic-resume/compare/v2.0.9...v2.0.10)
+
+### 🚀 Enhancements
+
+- Redesign the landing page with interactive feature demos ([1a2fd3c](https://github.com/JOYCEQL/magic-resume/commit/1a2fd3c)).
+- Add light, dark, and system appearance controls in settings, refine backup configuration states, and remove the page-break visibility toggle while preserving pagination guides ([05ffbb0](https://github.com/JOYCEQL/magic-resume/commit/05ffbb0)).
+- Discover available AI models from provider APIs and refine model management and bilingual settings ([51c4185](https://github.com/JOYCEQL/magic-resume/commit/51c4185), [3d0f319](https://github.com/JOYCEQL/magic-resume/commit/3d0f319)).
+- Support font sizes for selected resume body text ([aeadde5](https://github.com/JOYCEQL/magic-resume/commit/aeadde5)).
+- Refine dashboard sidebar icons and dark-mode contrast ([79bd313](https://github.com/JOYCEQL/magic-resume/commit/79bd313), [c121791](https://github.com/JOYCEQL/magic-resume/commit/c121791)).
+
+### 🩹 Fixes
+
+- Prevent the landing page from briefly losing styles when navigating from the dashboard ([0a4d754](https://github.com/JOYCEQL/magic-resume/commit/0a4d754)).
+- Stabilize one-page resume layout and align export output ([fe19c2c](https://github.com/JOYCEQL/magic-resume/commit/fe19c2c)).
+- Keep mobile workbench navigation visible and constrain dashboard scrolling to the viewport ([83d6461](https://github.com/JOYCEQL/magic-resume/commit/83d6461), [eb909f1](https://github.com/JOYCEQL/magic-resume/commit/eb909f1)).
+- Preserve leading numbers during resume import ([de7c2b6](https://github.com/JOYCEQL/magic-resume/commit/de7c2b6)).
+- Align contact icons with the first text line and preserve contact-field casing in the editorial template ([3cfaf40](https://github.com/JOYCEQL/magic-resume/commit/3cfaf40), [9fec18b](https://github.com/JOYCEQL/magic-resume/commit/9fec18b)).
+
+### 🏡 Chore
+
+- Add the promotional video composition, rendering script, local assets, and still frames ([482b7df](https://github.com/JOYCEQL/magic-resume/commit/482b7df)).
+- Add Chromium and WebKit coverage for mobile workbench navigation ([e6044cd](https://github.com/JOYCEQL/magic-resume/commit/e6044cd)).
+
+## v2.0.9
+
+[compare changes](https://github.com/JOYCEQL/magic-resume/compare/v2.0.8...v2.0.9)
+
+### 🚀 Enhancements
+
+- Implement multi-model AI configuration, PDF import, and state migration ([6407663](https://github.com/JOYCEQL/magic-resume/commit/6407663))
+
+### 🩹 Fixes
+
+- Use runtime-safe AI provider networking ([0181e37](https://github.com/JOYCEQL/magic-resume/commit/0181e37))
+- Stop auto one-page preview layout oscillation and add browser regression coverage ([a9df7c5](https://github.com/JOYCEQL/magic-resume/commit/a9df7c5), [#384](https://github.com/JOYCEQL/magic-resume/issues/384))
+
+
+## v2.0.8
+
+[compare changes](https://github.com/JOYCEQL/magic-resume/compare/v2.0.7...main)
+
+### 🚀 Enhancements
+
+- Add long-page PDF export ([5351db3](https://github.com/JOYCEQL/magic-resume/commit/5351db3))
+- Add single long PNG export ([ba4f46b](https://github.com/JOYCEQL/magic-resume/commit/ba4f46b))
+- Add font preloading in ResumeWorkbench and optimize SectionTitle by removing unnecessary store dependencies ([0a08e50](https://github.com/JOYCEQL/magic-resume/commit/0a08e50))
+
+### ❤️ Contributors
+
+- JOYCEQL <1449239013@qq.com>
+- Furina <3559551198@qq.com>
+
+## v2.0.7
+
+[compare changes](https://github.com/JOYCEQL/magic-resume/compare/v2.0.6...main)
+
+### 🚀 Enhancements
+
+- Implement custom section deletion, improve ID generation logic, and add storage safety checks ([e356d9d](https://github.com/JOYCEQL/magic-resume/commit/e356d9d))
+- Switch to content tab automatically upon new section creation in SidePanel ([f286738](https://github.com/JOYCEQL/magic-resume/commit/f286738))
+- Integrate react-grab development utility for runtime inspection ([ce3cd2e](https://github.com/JOYCEQL/magic-resume/commit/ce3cd2e))
+- Update navigation to support parameter objects and add error-safe persistence to resume store ([f1fc952](https://github.com/JOYCEQL/magic-resume/commit/f1fc952))
+- Implement undo/redo functionality and fix sync debouncing logic in resume store ([1ce14a4](https://github.com/JOYCEQL/magic-resume/commit/1ce14a4))
+
+### 🎨 Styles
+
+- Redesign CTASection ([8f8f1fe](https://github.com/JOYCEQL/magic-resume/commit/8f8f1fe))
+
+### ❤️ Contributors
+
+- JOYCEQL <1449239013@qq.com>
 
 ## v2.0.6
 

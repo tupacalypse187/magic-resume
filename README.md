@@ -1,3 +1,16 @@
+> **Fork notice:** This repo is a fork of the upstream
+> [Magic Resume](https://github.com/JOYCEQL/magic-resume) project,
+> with local additions on top:
+>
+> - **AI features** — provider configuration and AI-assisted editing;
+>   see the [AI Features Guide](https://github.com/tupacalypse187/magic-resume/blob/fix/i18n-english-translations/AI-FEATURES-GUIDE.md)
+>   (on the `fix/i18n-english-translations` branch, pending merge to `main`).
+> - **Lab deployment** — prebuilt image (`tupacalypse187/magic-resume`),
+>   compose setup, and Kubernetes manifests; see the
+>   [Deployment Guide](https://github.com/tupacalypse187/magic-resume/blob/fix/i18n-english-translations/deploy/README.md)
+>   (same branch, pending merge).
+>
+> Everything below is the upstream README unless noted otherwise.
 <div align="center">
 
 # ✨ Magic Resume ✨
@@ -13,6 +26,52 @@
 </div>
 
 Magic Resume is a modern online resume editor that makes creating professional resumes simple and enjoyable. Built with TanStack Start and Framer Motion, it supports real-time preview, custom themes, and a comprehensive suite of AI-powered features.
+
+## 📑 Table of Contents
+
+- [🏗️ Architecture](#️-architecture)
+- [📸 Screenshots](#-screenshots)
+- [✨ Features](#-features)
+- [🛠️ Tech Stack](#️-tech-stack)
+- [🚀 Quick Start](#-quick-start)
+- [📦 Build and Deploy](#-build-and-deploy)
+- [🐳 Docker Deployment](#-docker-deployment)
+- [📝 License and Commercial Use](#-license-and-commercial-use)
+- [🗺️ Roadmap](#️-roadmap)
+- [📈 Star History](#-star-history)
+- [📞 Contact](#-contact)
+- [🌟 Support](#-support)
+- [❤️ Sponsors](#️-sponsors)
+
+## 🏗️ Architecture
+
+Magic Resume is a TanStack Start (React + Vite) app: the editor and its live
+preview run in the browser, resume and AI settings live in zustand stores,
+and AI polish calls whichever provider the user configured with their own
+API key. This fork packages the built app as a single Docker image that a
+small Node server serves in the lab.
+
+```mermaid
+flowchart LR
+    Browser["Browser<br/>editor · live preview"] --> App["TanStack Start app<br/>routes · TipTap editor · themes"]
+    App --> Store["zustand stores<br/>resume data · AI config"]
+    App --> Export["Export<br/>PDF · print"]
+    Store -.->|provider + user key| AI["AI providers<br/>OpenAI · DeepSeek · Doubao · Gemini"]
+    Image["Docker image<br/>tupacalypse187/magic-resume"] -->|runs| Server["Node server<br/>server.mjs"]
+    Server -->|serves built app| Browser
+```
+
+| Piece | Where | Role |
+|---|---|---|
+| Web app | `src/routes`, `src/app`, `src/components` | TanStack Router/Start pages — landing, dashboard, editor — with a TipTap rich-text editor, themeable live preview, and Framer Motion |
+| State | `src/store` | zustand stores for the resume data and the AI configuration (`ai-config-storage`) |
+| AI features | `src/config/ai.ts`, `src/hooks/useAIConfiguration.tsx`, `src/lib/server/` | Provider definitions for OpenAI, DeepSeek, Doubao, and Gemini; AI polish/generation calls go out with the user's own API keys |
+| Export | `src/components`, `src/lib` | PDF and print flows (html2pdf.js; Puppeteer/Chromium bundled for rendering) |
+| Packaging | `Dockerfile`, `docker-compose.yml` | Multi-stage pnpm build into a slim Node runner serving `dist` via `server.mjs`; published as `tupacalypse187/magic-resume` by the docker-publish workflow and run in the lab with docker compose |
+
+**Main flow:** open a resume → edit in TipTap with the preview updating
+live → optionally run AI polish against the configured provider → export to
+PDF. In the lab the whole app is just the one container.
 
 ## 📸 Screenshots
 
@@ -136,6 +195,17 @@ pnpm dev
 pnpm build
 ```
 
+### AI provider networking
+
+Cloudflare Workers use the platform's native `fetch` and do not need an application-level proxy. For Node.js or Docker deployments in regions that cannot directly reach OpenAI, Gemini, or Anthropic, set `AI_PROXY_URL`. `HTTPS_PROXY` and `HTTP_PROXY` are also supported as fallbacks.
+
+```bash
+AI_PROXY_URL=http://127.0.0.1:7890
+```
+
+DeepSeek, Qwen, and Doubao continue to use a direct connection.
+
+
 ## 🐳 Docker Deployment
 
 ### Prebuilt image
@@ -154,6 +224,21 @@ docker run -d -p 3000:3000 \
 ```
 
 For Kubernetes / MicroK8s deployment, TLS setup, and the full tag structure, see **[deploy/README.md](./deploy/README.md)**.
+
+### 🐳 Docker Compose
+
+1. Ensure you have Docker and Docker Compose installed
+
+2. Run the following command in the project root directory:
+
+```bash
+docker compose up -d
+```
+
+This will:
+
+- Automatically build the application image
+- Start the container in the background
 
 ### Build from source (two-stage build for fast rebuilds)
 
@@ -193,12 +278,12 @@ Example `ai-config.json`:
 }
 ```
 
-## 📝 License and Commercial Use
+## 📝 License and Usage Restrictions
 
-The source code of this project is open-sourced under the **Apache 2.0** license, but with **strict commercial use restrictions**:
+The source code of this project is released under the **Apache 2.0** license with an additional **non-commercial use restriction**:
 
 - **Free for Personal Use**: Free to use purely for personal, non-commercial purposes (e.g., personal learning, creating your own resume).
-- **Commercial License Required**: Unauthorized commercial use is strictly prohibited. Any organization or individual that provides it as a service (SaaS/PaaS, etc.) to the public for profit, uses it for enterprise commercial operations, or conducts secondary commercial development, **must obtain a commercial license, regardless of whether the source code has been modified**.
+- **Commercial Use Prohibited**: The project may not be used for any commercial purpose, including providing it as a paid or profit-generating service (such as SaaS/PaaS), enterprise commercial operations, resale, or secondary commercial development, **regardless of whether the source code has been modified**.
 
 Please see the [LICENSE](LICENSE) file for detailed terms.
 
@@ -216,7 +301,10 @@ Please see the [LICENSE](LICENSE) file for detailed terms.
 - [x] Auto one page
 - [x] Docker deployment with fast rebuilds
 - [ ] Support for more resume templates
-- [ ] Support for more export formats
+- [x] Support for more export formats
+- [x] Import PDF, Markdown, etc.
+- [x] Custom model
+- [x] Auto one page
 - [ ] Online resume hosting
 
 ## 📈 Star History
@@ -235,11 +323,11 @@ You can follow the latest updates via:
 
 - Author: Siyue
 - X: @GuangzhouY81070
-- Discord: Join our community https://discord.gg/9mWgZrW3VN
+- Discord: Join our community [discord.gg/9mWgZrW3VN](https://discord.gg/9mWgZrW3VN)
 - Email: 18806723365@163.com
 
 
-- Project Homepage: https://github.com/JOYCEQL/magic-resume
+- Project Homepage: [github.com/JOYCEQL/magic-resume](https://github.com/JOYCEQL/magic-resume)
 
 ## 🌟 Support
 
