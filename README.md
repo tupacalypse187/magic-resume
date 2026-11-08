@@ -55,7 +55,7 @@ flowchart LR
     App --> Store["zustand stores<br/>resume data · AI config"]
     App --> Export["Export<br/>PDF · print"]
     Store -.->|provider + user key| AI["AI providers<br/>OpenAI · DeepSeek · Doubao · Gemini"]
-    Image["Docker image<br/>tupacalypse187/magic-resume"] -->|runs| Server["Node server<br/>server.mjs"]
+    Image["Docker image<br/>tupacalypse187/magic-resume"] -->|runs| Server["Nitro server<br/>.output/server"]
     Server -->|serves built app| Browser
 ```
 
@@ -65,7 +65,7 @@ flowchart LR
 | State | `src/store` | zustand stores for the resume data and the AI configuration (`ai-config-storage`) |
 | AI features | `src/config/ai.ts`, `src/hooks/useAIConfiguration.tsx`, `src/lib/server/` | Provider definitions for OpenAI, DeepSeek, Doubao, and Gemini; AI polish/generation calls go out with the user's own API keys |
 | Export | `src/components`, `src/lib` | PDF and print flows (html2pdf.js; Puppeteer/Chromium bundled for rendering) |
-| Packaging | `Dockerfile`, `docker-compose.yml` | Multi-stage pnpm build into a slim Node runner serving `dist` via `server.mjs`; published as `tupacalypse187/magic-resume` by the docker-publish workflow and run in the lab with docker compose |
+| Packaging | `Dockerfile`, `docker-compose.yml` | Multi-stage pnpm build into a slim Node runner serving the Nitro `.output` bundle; published as `tupacalypse187/magic-resume` by the docker-publish workflow and run in the lab with docker compose |
 
 **Main flow:** open a resume → edit in TipTap with the preview updating
 live → optionally run AI polish against the configured provider → export to
